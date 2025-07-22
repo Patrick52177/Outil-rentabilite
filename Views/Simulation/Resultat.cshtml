@@ -1,0 +1,18 @@
+﻿@model OutilRentabilite.Models.ParametresSimulation
+
+<h2>Résultats</h2>
+
+@if (Model.Resultat != null)
+{
+    <ul>
+        <li>Revenu total : @Model.Resultat.RevenuTotal</li>
+        <li>Coût total : @Model.Resultat.CoutTotal</li>
+        <li>Bénéfice net : @Model.Resultat.BeneficeNet</li>
+        <li>Marge nette : @Model.Resultat.MargeNette %</li>
+        <li>ROI : @Model.Resultat.ROI %</li>
+    </ul>
+}
+else
+{
+    <p>Aucun résultat</p>
+}

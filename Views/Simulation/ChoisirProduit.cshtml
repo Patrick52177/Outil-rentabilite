@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Choisir un produit financier";
+    var produits = ViewBag.Produits as List<OutilRentabilite.Models.ProduitFinancier>;
+}
+
+<h2>Choisir un produit financier</h2>
+
+@if (produits == null || !produits.Any())
+{
+    <div class="alert alert-warning">
+        Aucun produit n’est disponible. Veuillez d’abord en créer dans la base de données.
+    </div>
+}
+else
+{
+    <form asp-action="ChoisirProduit" method="post">
+        <div class="form-group">
+            <label for="produitId">Produit :</label>
+            <select name="produitId" class="form-control" required>
+                <option value="">-- Sélectionnez un produit --</option>
+                @foreach (var p in produits)
+                {
+                    <option value="@p.Id">@p.Nom (@p.TypeProduit)</option>
+                }
+            </select>
+        </div>
+
+        <br />
+        <button type="submit" class="btn btn-primary">Commencer la simulation</button>
+    </form>
+}

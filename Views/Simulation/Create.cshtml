@@ -1,0 +1,44 @@
+﻿@model OutilRentabilite.Models.ParametresSimulation
+
+
+@{
+    ViewData["Title"] = "Nouvelle simulation";
+    var produits = ViewBag.Produits as List<OutilRentabilite.Models.ProduitFinancier>;
+}
+
+<h2>Nouvelle simulation</h2>
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<form asp-action="Create" method="post">
+    @if (ViewBag.NomProduit != null)
+    {
+        <div class="alert alert-info">Produit :<strong>(@ViewBag.TypeProduit)</strong></div>
+
+        <input type="hidden" asp-for="ProduitFinancierId"/>
+
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <strong>
+                Aucune Produit
+            </strong>
+
+        </div>
+    }
+
+    <input asp-for="Montant" class="form-control" placeholder="Montant" />
+    <input asp-for="DureeMois" class="form-control" placeholder="Durée (mois)" />
+    <input asp-for="TauxInteret" class="form-control" placeholder="Taux d'intérêt" />
+    <input asp-for="FraisDossier" class="form-control" placeholder="Frais de dossier" />
+    <input asp-for="CoutFinancement" class="form-control" placeholder="Coût financement" />
+    <input asp-for="CoutRisque" class="form-control" placeholder="Coût risque" />
+    <input asp-for="CoutOperationnel" class="form-control" placeholder="Coût opérationnel" />
+
+    <button type="submit" class="btn btn-primary mt-3">Lancer</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
