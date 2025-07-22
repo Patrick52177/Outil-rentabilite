@@ -27,6 +27,16 @@
 
         </div>
     }
+    <div class="form-group">
+        <label for="Montant">Montant</label>
+        <input asp-for="Montant" class="form-control" />
+        <span asp-validation-for="Montant" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="DureeMois">Mois</label>
+        <input asp-for="DureeMois" class="form-control" />
+        <span asp-validation-for="DureeMois" class="text-danger"></span>
+    </div>
 
     @{
         var typeProduit = ((string)ViewBag.TypeProduit)?.ToLower();
@@ -83,23 +93,18 @@
     @if (typeProduit == "services")
     {
         <div class="form-group">
+            <label for="FraisDossier">Frais de dossier</label>
+            <input asp-for="FraisDossier" class="form-control" />
+            <span asp-validation-for="FraisDossier" class="text-danger"></span>
+        </div>
+        <div class="form-group">
             <label for="CoutOperationel">Coût opérationnel</label>
             <input asp-for="CoutOperationnel" class="form-control" />
             <span asp-validation-for="CoutOperationnel" class="text-danger"></span>
         </div>
+
     }  
-    <div class="form-group">
-        <label for="Montant">Montant</label>
-        <input asp-for="Montant" class="form-control" />
-        <span asp-validation-for="Montant" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label for="DureeMois">Mois</label>
-        <input asp-for="DureeMois" class="form-control" />
-        <span asp-validation-for="DureeMois" class="text-danger"></span>
-    </div>
-
-
+ 
     <button type="submit" class="btn btn-primary mt-3">Lancer</button>
 </form>
 
