@@ -43,7 +43,7 @@ namespace OutilRentabilite.Controllers
                 if (produit != null)
                 {
                     ViewBag.NomProduit = produit.Nom;
-                    ViewBag.TypeProduit = produit.TypeProduit;
+                    ViewBag.TypeProduit = produit.TypeProduit.ToLower();
 
                 }
             }
