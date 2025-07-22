@@ -95,6 +95,9 @@ namespace OutilRentabilite.Migrations
                     b.Property<decimal>("CoutTotal")
                         .HasColumnType("DECIMAL(18, 2)");
 
+                    b.Property<float>("MargeBrute")
+                        .HasColumnType("BINARY_FLOAT");
+
                     b.Property<float>("MargeNette")
                         .HasColumnType("BINARY_FLOAT");
 

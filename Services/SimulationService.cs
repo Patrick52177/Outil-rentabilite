@@ -26,6 +26,8 @@ public class SimulationService
         }
 
         decimal benefice = revenu - coutTotal;
+        var margeBrute = revenu - coutTotal;
+        var tauxMargeBrute = revenu != 0 ? (margeBrute / revenu) * 100 : 0;
 
         return new ResultatSimulation
         {
@@ -33,6 +35,7 @@ public class SimulationService
             CoutTotal = coutTotal,
             BeneficeNet = benefice,
             MargeNette = revenu != 0 ? (float)(benefice / revenu * 100) : 0,
+            MargeBrute = (float)tauxMargeBrute,
             ROI = coutTotal != 0 ? (float)(benefice / coutTotal * 100) : 0,
             ROE = 10f, // valeur fictive
             ROA = 5f   // valeur fictive
