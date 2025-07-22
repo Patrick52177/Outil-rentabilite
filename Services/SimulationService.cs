@@ -21,7 +21,7 @@ public class SimulationService
                 break;
 
             case "Services":
-                revenu = param.FraisDossier;
+                revenu = param.Montant;
                 break;
         }
 
