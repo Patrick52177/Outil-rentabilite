@@ -7,12 +7,12 @@ public class SimulationService
     public ResultatSimulation CalculerResultat(ParametresSimulation param, ProduitFinancier produit)
     {
         decimal revenu = 0;
-        decimal coutTotal = param.FraisDossier + param.CoutFinancement + param.CoutRisque + param.CoutOperationnel;
+        decimal coutTotal =  param.CoutFinancement + param.CoutRisque + param.CoutOperationnel;
 
         switch (produit.TypeProduit)
         {
             case "Crédit":
-                revenu = param.Montant * (decimal)param.TauxInteret / 100 * param.DureeMois / 12;
+                revenu = param.Montant * (decimal)param.TauxInteret / 100 * param.DureeMois / 12 +param.FraisDossier ;
                 break;
 
             case "Epargne":
