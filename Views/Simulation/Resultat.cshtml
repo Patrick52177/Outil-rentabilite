@@ -1,6 +1,7 @@
 ﻿@model OutilRentabilite.Models.ParametresSimulation
 @{
     ViewData["Title"] = "Résultat de Simulation";
+    
 }
 
 
@@ -11,7 +12,7 @@
     <h2 class="mt-4">📌 Résultat de la simulation</h2>
 
     <div class="card mt-4 p-4 shadow-sm">
-        <h4>🟩 Produit : @ViewBag.NomProduit (@ViewBag.TypeProduit)</h4>
+        <h4>🟩 Produit : @ViewBag.TypeProduit</h4>
         <p><strong>Durée :</strong> @Model.DureeMois mois</p>
         <p><strong>Montant :</strong> @Model.Montant.ToString("N0") Ar</p>
     </div>

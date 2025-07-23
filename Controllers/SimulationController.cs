@@ -84,6 +84,8 @@ namespace OutilRentabilite.Controllers
 
             if (simulation == null)
                 return NotFound();
+            ViewBag.NomProduit = simulation.ProduitFinancier?.Nom ?? "Inconnu";
+            ViewBag.TypeProduit = simulation.ProduitFinancier?.TypeProduit ?? "Inconnu";
 
             return View(simulation);
         }
