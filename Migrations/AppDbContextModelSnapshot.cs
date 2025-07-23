@@ -41,6 +41,9 @@ namespace OutilRentabilite.Migrations
                     b.Property<int>("DureeMois")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<decimal>("FondsPropres")
+                        .HasColumnType("DECIMAL(18, 2)");
+
                     b.Property<decimal>("FraisDossier")
                         .HasColumnType("DECIMAL(18, 2)");
 
@@ -52,6 +55,9 @@ namespace OutilRentabilite.Migrations
 
                     b.Property<float>("TauxInteret")
                         .HasColumnType("BINARY_FLOAT");
+
+                    b.Property<decimal>("TotalActif")
+                        .HasColumnType("DECIMAL(18, 2)");
 
                     b.HasKey("Id");
 

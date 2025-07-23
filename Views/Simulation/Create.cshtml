@@ -66,8 +66,18 @@
         </div>
         <div class="form-group">
             <label for="CoutFinancement">Coût de Financement</label>
-            <input asp-for=CoutFinancement" class="form-control" />
+            <input asp-for="CoutFinancement" class="form-control" />
             <span asp-validation-for="CoutFinancement" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="TotalActif">Total Actif</label>
+            <input asp-for=TotalActif" class="form-control" />
+            <span asp-validation-for="TotalActif" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="FondsPropres">Fonds Propres</label>
+            <input asp-for="FondsPropres" class="form-control" />
+            <span asp-validation-for="FondsPropres" class="text-danger"></span>
         </div>
 
     }
@@ -88,6 +98,16 @@
             <input asp-for=CoutFinancement" class="form-control" />
             <span asp-validation-for="CoutFinancement" class="text-danger"></span>
         </div>
+        <div class="form-group">
+            <label for="TotalActif">Total Actif</label>
+            <input asp-for=TotalActif" class="form-control" />
+            <span asp-validation-for="TotalActif" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="FondsPropres">Fonds Propres</label>
+            <input asp-for="FondsPropres" class="form-control" />
+            <span asp-validation-for="FondsPropres" class="text-danger"></span>
+        </div>
 
     }
     @if (typeProduit == "services")
@@ -96,6 +116,11 @@
             <label for="CoutOperationel">Coût opérationnel</label>
             <input asp-for="CoutOperationnel" class="form-control" />
             <span asp-validation-for="CoutOperationnel" class="text-danger"></span>
+        </div>
+                <div class="form-group">
+            <label for="FondsPropres">Fonds Propres</label>
+            <input asp-for="FondsPropres" class="form-control" />
+            <span asp-validation-for="FondsPropres" class="text-danger"></span>
         </div>
 
     }  

@@ -37,8 +37,8 @@ public class SimulationService
             MargeNette = revenu != 0 ? (float)(benefice / revenu * 100) : 0,
             MargeBrute = (float)tauxMargeBrute,
             ROI = coutTotal != 0 ? (float)(benefice / coutTotal * 100) : 0,
-            ROE = 10f, // valeur fictive
-            ROA = 5f   // valeur fictive
+            ROE = param.TotalActif == 0 ? 0 : (float)(benefice / param.TotalActif) * 100, // valeur fictive
+            ROA = param.FondsPropres == 0 ? 0 : (float)(benefice / param.FondsPropres) * 100 // valeur fictive
         };
     }
 }

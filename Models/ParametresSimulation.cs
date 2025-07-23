@@ -35,6 +35,12 @@ namespace OutilRentabilite.Models
         [Required]
         public decimal CoutOperationnel { get; set; }
 
+        [Required]
+        public decimal TotalActif { get; set; }
+
+        [Required]
+        public decimal FondsPropres { get; set; }
+
         public ResultatSimulation? Resultat { get; set; }
     }
 }
