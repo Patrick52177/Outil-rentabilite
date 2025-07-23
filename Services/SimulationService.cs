@@ -25,7 +25,9 @@ public class SimulationService
                 break;
         }
 
-        decimal benefice = revenu - coutTotal;
+        decimal benefice = revenu - coutTotal ;
+        var margeNet = revenu != 0 ? (float)(benefice / revenu * 100) : 0;
+        decimal beneficeMensuel = param.DureeMois == 0 ? 0 :(decimal)(margeNet / param.DureeMois);
         var margeBrute = revenu - coutTotal;
         var tauxMargeBrute = revenu != 0 ? (margeBrute / revenu) * 100 : 0;
 
@@ -34,8 +36,9 @@ public class SimulationService
             RevenuTotal = revenu,
             CoutTotal = coutTotal,
             BeneficeNet = benefice,
-            MargeNette = revenu != 0 ? (float)(benefice / revenu * 100) : 0,
+            MargeNette = margeNet,
             MargeBrute = (float)tauxMargeBrute,
+            PaybackPeriod = beneficeMensuel == 0 ? 0 : (coutTotal / beneficeMensuel),
             ROI = coutTotal != 0 ? (float)(benefice / coutTotal * 100) : 0,
             ROE = param.TotalActif == 0 ? 0 : (float)(benefice / param.TotalActif) * 100, // valeur fictive
             ROA = param.FondsPropres == 0 ? 0 : (float)(benefice / param.FondsPropres) * 100 // valeur fictive

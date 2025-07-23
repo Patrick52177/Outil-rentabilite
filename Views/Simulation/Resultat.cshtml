@@ -1,21 +1,71 @@
 ﻿@model OutilRentabilite.Models.ParametresSimulation
+@{
+    ViewData["Title"] = "Résultat de Simulation";
+}
+
 
 <h2>Résultats</h2>
 
 @if (Model.Resultat != null)
 {
+    <h2 class="mt-4">📌 Résultat de la simulation</h2>
+
+    <div class="card mt-4 p-4 shadow-sm">
+        <h4>🟩 Produit : @ViewBag.NomProduit (@ViewBag.TypeProduit)</h4>
+        <p><strong>Durée :</strong> @Model.DureeMois mois</p>
+        <p><strong>Montant :</strong> @Model.Montant.ToString("N0") Ar</p>
+    </div>
+
+    <hr />
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h4>💰 Résumé Financier</h4>
+            <ul>
+                <li><strong>Revenu total :</strong> @Model.Resultat.RevenuTotal.ToString("N0") Ar</li>
+                <li><strong>Coût total :</strong> @Model.Resultat.CoutTotal.ToString("N0") Ar</li>
+                <li><strong>Bénéfice net :</strong> @Model.Resultat.BeneficeNet.ToString("N0") Ar</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h4>📊 Marges</h4>
+            <ul>
+                <li><strong>Marge brute :</strong> @Model.Resultat.MargeBrute.ToString("N2") %</li>
+                <li><strong>Marge nette :</strong>  @Model.Resultat.MargeNette.ToString("N2") %</li>
+            </ul>
+        </div>
+    </div>
+
+    <hr />
+
+    <h4 class="mt-4">📈 Indicateurs Financiers</h4>
     <ul>
-        <li>Revenu total : @Model.Resultat.RevenuTotal</li>
-        <li>Coût total : @Model.Resultat.CoutTotal</li>
-        <li>Bénéfice net : @Model.Resultat.BeneficeNet</li>
-        <li>Marge nette : @Model.Resultat.MargeNette %</li>
-        <li>Marge Brute : @Model.Resultat.MargeBrute %</li>
-        <li>ROI : @Model.Resultat.ROI %</li>
-        <li>ROE : @Model.Resultat.ROE %</li>
-        <li>ROA : @Model.Resultat.ROA %</li>
+        <li><strong>ROI (Return on Investment) :</strong> @Model.Resultat.ROI.ToString("N2") %</li>
+        @{
+            var typeProduit = ((string)ViewBag.TypeProduit)?.ToLower();
+        }
+
+        @if (typeProduit != "services")
+        {
+            <li><strong>ROA (Return on Assets) :</strong> @Model.Resultat.ROA.ToString("N2") %</li>
+            <li><strong>ROE (Return on Equity) :</strong> @Model.Resultat.ROE.ToString("N2") %</li>
+            <li><strong>Payback Period :</strong> @Model.Resultat.PaybackPeriod.ToString("N2") mois</li>
+        } 
+        else
+        {
+            <li><strong>ROE (Return on Equity) :</strong> @Model.Resultat.ROE.ToString("N2") %</li>
+        }
+
     </ul>
+
+    <hr />
+  
+
+
 }
 else
 {
     <p>Aucun résultat</p>
 }
+
+<a asp-action="ChoisirProduit" class="btn btn-secondary mt-3">🔄 Faire une autre simulation</a>

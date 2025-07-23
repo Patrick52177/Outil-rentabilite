@@ -110,6 +110,9 @@ namespace OutilRentabilite.Migrations
                     b.Property<int>("ParametresSimulationId")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<decimal>("PaybackPeriod")
+                        .HasColumnType("DECIMAL(18, 2)");
+
                     b.Property<float>("ROA")
                         .HasColumnType("BINARY_FLOAT");
 

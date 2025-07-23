@@ -10,6 +10,7 @@ public class ResultatSimulation
     public decimal RevenuTotal { get; set; }
     public decimal CoutTotal { get; set; }
     public decimal BeneficeNet { get; set; }
+    public decimal PaybackPeriod { get; set; }
     public float MargeBrute { get; set; }
     public float MargeNette { get; set; }
     public float ROI { get; set; }
