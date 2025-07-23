@@ -1,4 +1,7 @@
 ﻿@model OutilRentabilite.Models.ParametresSimulation
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 
 @{
@@ -13,7 +16,7 @@
 <form asp-action="Create" method="post">
     @if (ViewBag.NomProduit != null)
     {
-        <div class="alert alert-info">Produit :<strong>(@ViewBag.TypeProduit)</strong></div>
+        <div class="alert alert-info">Produit :<strong>@ViewBag.TypeProduit</strong></div>
 
         <input type="hidden" asp-for="ProduitFinancierId"/>
 
