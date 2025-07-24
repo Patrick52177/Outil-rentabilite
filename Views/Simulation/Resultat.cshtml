@@ -52,7 +52,7 @@
         @if (typeProduit != "services")
         {
             <li><strong>ROA (Return on Assets) :</strong> @Model.Resultat.ROA.ToString("N2") %</li>
-            <li><strong>ROE (Return on Equity) :</strong> @Model.Resultat.ROE.ToString("N2") %</li>
+            <li><strong>ROE (Return on Equity) :</strong> @Model.Resultat.ROE.ToString("N3") %</li>
             <li><strong>Payback Period :</strong> @Model.Resultat.PaybackPeriod.ToString("N2") mois</li>
         } 
         else
