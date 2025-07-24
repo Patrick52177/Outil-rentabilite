@@ -1,0 +1,46 @@
+﻿@model List<OutilRentabilite.Models.ParametresSimulation>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Historique des Simulations</h2>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Date</th>
+            <th>Produit</th>
+            <th>Montant</th>
+            <th>Durée</th>
+            <th>Revenu</th>
+            <th>Coût</th>
+            <th>Bénéfice</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.DateSimulation.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@item.ProduitFinancier?.Nom</td>
+                <td>@item.Montant.ToString("N0") Ar</td>
+                <td>@item.DureeMois</td>
+                <td>@item.Resultat?.RevenuTotal.ToString("N0") Ar</td>
+                <td>@item.Resultat?.CoutTotal.ToString("N0") Ar</td>
+                <td>@item.Resultat?.BeneficeNet.ToString("N0") Ar</td>
+                <td>
+                    <a class="btn btn-info btn-sm" href="@Url.Action("Resultat", "Simulation", new { id = item.Id })">Voir</a>
+
+                    <form asp-action="Supprimer" method="post" style="display:inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous supprimer cette simulation ?')">
+                            🗑 Supprimer
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
