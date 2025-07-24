@@ -58,13 +58,14 @@ namespace OutilRentabilite.Controllers
         public IActionResult Create(ParametresSimulation param)
         {
             var produit = _context.ProduitsFinanciers.Find(param.ProduitFinancierId);
-
+           
             if (produit == null)
             {
                 ModelState.AddModelError("", "Produit introuvable.");
                 return View(param);
             }
 
+            param.DateSimulation = DateTime.Now;
             // Appel au service de calcul
             param.Resultat = _service.CalculerResultat(param, produit);
 
@@ -89,5 +90,34 @@ namespace OutilRentabilite.Controllers
 
             return View(simulation);
         }
+
+        public IActionResult Historique()
+        {
+            var simulations = _context.ParametresSimulations
+                .Include(p => p.ProduitFinancier)
+                .Include(p => p.Resultat)
+                .OrderByDescending(p => p.DateSimulation)
+                .ToList();
+
+            return View(simulations);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Supprimer(int id)
+        {
+            var simulation = _context.ParametresSimulations
+                .Include(p => p.Resultat)
+                .FirstOrDefault(p => p.Id == id);
+
+            if (simulation != null)
+            {
+                _context.ParametresSimulations.Remove(simulation);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Historique");
+        }
+
+
     }
 }

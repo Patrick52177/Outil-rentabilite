@@ -47,6 +47,9 @@ namespace OutilRentabilite.Models
         [Required]
         public decimal FondsPropres { get; set; }
 
+        [DataType(DataType.DateTime)]
+        public DateTime DateSimulation { get; set; } = DateTime.Now;
+
 
         public ResultatSimulation? Resultat { get; set; }
     }
