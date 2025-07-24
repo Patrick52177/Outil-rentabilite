@@ -47,6 +47,12 @@
     @if (typeProduit == "crédit")
     {
         <div class="form-group">
+            <label for="NombreOffre">Nombre de Client estimé</label>
+            <input asp-for="NombreOffre" class="form-control" />
+            <span asp-validation-for="NombreOffre" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
             <label for="TauxInteret">Taux d'intérêt</label>
             <input asp-for="TauxInteret" class="form-control" />
             <span asp-validation-for="TauxInteret" class="text-danger"></span>
@@ -72,55 +78,42 @@
             <input asp-for="CoutFinancement" class="form-control" />
             <span asp-validation-for="CoutFinancement" class="text-danger"></span>
         </div>
-        <div class="form-group">
-            <label for="TotalActif">Total Actif</label>
-            <input asp-for=TotalActif" class="form-control" />
-            <span asp-validation-for="TotalActif" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="FondsPropres">Fonds Propres</label>
-            <input asp-for="FondsPropres" class="form-control" />
-            <span asp-validation-for="FondsPropres" class="text-danger"></span>
-        </div>
 
     }
     @if (typeProduit == "epargne")
     {
+
+        <div class="form-group">
+            <label for="NombreOffre">Nombre de Client estimé</label>
+            <input asp-for="NombreOffre" class="form-control" />
+            <span asp-validation-for="NombreOffre" class="text-danger"></span>
+        </div>
+
         <div class="form-group">
             <label for="TauxInteret">Taux d'intérêt (épargne)</label>
             <input asp-for="TauxInteret" class="form-control" />
             <span asp-validation-for="TauxInteret" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label for="CoutOperationel">Coût opérationnel</label>
-            <input asp-for="CoutOperationnel" class="form-control" />
-            <span asp-validation-for="CoutOperationnel" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="CoutFinancement">Coût de Financement</label>
-            <input asp-for=CoutFinancement" class="form-control" />
-            <span asp-validation-for="CoutFinancement" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="TotalActif">Total Actif</label>
-            <input asp-for=TotalActif" class="form-control" />
-            <span asp-validation-for="TotalActif" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="FondsPropres">Fonds Propres</label>
-            <input asp-for="FondsPropres" class="form-control" />
-            <span asp-validation-for="FondsPropres" class="text-danger"></span>
+            <label for="FraisGestion">Frais de gestion</label>
+            <input asp-for="FraisGestion" class="form-control" />
+            <span asp-validation-for="FraisGestion" class="text-danger"></span>
         </div>
 
     }
     @if (typeProduit == "services")
     {
         <div class="form-group">
-            <label for="CoutOperationel">Coût opérationnel</label>
+            <label for="CoutFinancement">Coût service client</label>
+            <input asp-for=CoutFinancement" class="form-control" />
+            <span asp-validation-for="CoutFinancement" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="CoutOperationel">Coût IT par opération</label>
             <input asp-for="CoutOperationnel" class="form-control" />
             <span asp-validation-for="CoutOperationnel" class="text-danger"></span>
         </div>
-                <div class="form-group">
+        <div class="form-group">
             <label for="FondsPropres">Fonds Propres</label>
             <input asp-for="FondsPropres" class="form-control" />
             <span asp-validation-for="FondsPropres" class="text-danger"></span>

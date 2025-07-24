@@ -47,8 +47,14 @@ namespace OutilRentabilite.Migrations
                     b.Property<decimal>("FraisDossier")
                         .HasColumnType("DECIMAL(18, 2)");
 
+                    b.Property<decimal>("FraisGestion")
+                        .HasColumnType("DECIMAL(18, 2)");
+
                     b.Property<decimal>("Montant")
                         .HasColumnType("DECIMAL(18, 2)");
+
+                    b.Property<int>("NombreOffre")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("ProduitFinancierId")
                         .HasColumnType("NUMBER(10)");

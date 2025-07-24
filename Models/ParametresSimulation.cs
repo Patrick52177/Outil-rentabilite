@@ -27,6 +27,9 @@ namespace OutilRentabilite.Models
         public decimal FraisDossier { get; set; }
 
         [Required]
+        public decimal FraisGestion { get; set; }
+
+        [Required]
         public decimal CoutFinancement { get; set; }
 
         [Required]
@@ -36,10 +39,14 @@ namespace OutilRentabilite.Models
         public decimal CoutOperationnel { get; set; }
 
         [Required]
+        public int NombreOffre { get; set; }
+
+        [Required]
         public decimal TotalActif { get; set; }
 
         [Required]
         public decimal FondsPropres { get; set; }
+
 
         public ResultatSimulation? Resultat { get; set; }
     }
