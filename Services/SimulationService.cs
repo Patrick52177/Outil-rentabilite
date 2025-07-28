@@ -22,7 +22,7 @@ public class SimulationService
                 coutTotal = coutfinance+coutOpera+coutRisque;
                 //calcule pour Roe
                 encourTotal = param.Montant * param.NombreOffre;
-                fondPropre = encourTotal * 0.01m;// le banque doit bloqué 10% pour ces fonds pour le crédit
+                fondPropre = encourTotal * 0.1m;// le banque doit bloqué 10% pour ces fonds pour le crédit
                
                 break;
 

@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "Analyse des produits (Graphiques)";
+    var analyses = ViewBag.AnalyseParProduit;
+
+    var produits = ViewBag.AnalyseParProduit as IEnumerable<dynamic>;
+}
+
+<h2 class="mb-4">Analyse des produits (Graphiques)</h2>
+ @if (produits != null && produits.Any())
+{
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>NB </th>
+                <th>Revenu</th>
+                <th>Coût</th>
+                <th>Bénéfice</th>
+                <th>brute</th>
+                <th>Nette</th>
+                <th>ROI</th>
+                <th>ROE</th>
+                <th>ROA</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var produit in produits)
+            {
+                <tr>
+                    <td>@produit.Nom</td>
+                    <td>@produit.Type</td>
+                    <td>@produit.NbSimulation.ToString("N0") </td>
+                    <td>@produit.MoyenneRevenu.ToString("N0")</td>
+                    <td>@produit.MoyenneCout.ToString("N0") Ar</td>
+                    <td>@produit.MoyenneBenefice.ToString("N0") Ar</td>
+                    <td>@produit.MoyenneMargeBrute.ToString("0.##") %</td>
+                    <td>@produit.MoyenneMargeNette.ToString("0.##") %</td>
+                    <td>@produit.MoyenneROI.ToString("0.##") %</td>
+                    <td>@produit.MoyenneROE.ToString("0.##") %</td>
+                    <td>@produit.MoyenneROA.ToString("0.##") %</td>
+               
+                </tr>
+            }
+        </tbody>
+    </table>
+} 
+else
+{
+    <div class="alert alert-danger"Aucun donnée></div>
+}
+
+<h2>Analyse des Produits Financiers</h2>
+
+<canvas id="beneficeChart" width="800" height="400"></canvas>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('beneficeChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    @foreach (var item in analyses)
+                    {
+                                <text>@Html.Raw(Json.Serialize(item.Nom)),</text>
+                    }
+                ],
+                datasets: [{
+                    label: 'Bénéfice moyen',
+                    data: [
+                        @foreach (var item in analyses)
+                        {
+                                <text>@item.MoyenneBenefice,</text>
+                        }
+                    ],
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('fr-FR') + ' Ar';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Bénéfice moyen par produit'
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
