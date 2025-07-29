@@ -39,7 +39,8 @@ public class SimulationService
 
             case "Services":
                 decimal Frais = param.Montant;
-                revenu = Frais * param.NombreOffre;
+                param.NombreOffre = 1;
+                revenu = Frais;
                 coutTotal = param.CoutFinancement +  param.CoutOperationnel;
                 fondPropre = param.FondsPropres;
                 
