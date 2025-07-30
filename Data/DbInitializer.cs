@@ -13,10 +13,16 @@ public static class DbInitializer
             context.ProduitsFinanciers.AddRange(
                 new ProduitFinancier
                 {
-                    Nom = "Crédit personnel",
+                    Nom = "Crédit Avotra",
                     TypeProduit = "Crédit"
                    
                 },
+                 new ProduitFinancier
+                 {
+                     Nom = "Crédit Safidy",
+                     TypeProduit = "Crédit"
+
+                 },
                  new ProduitFinancier
                  {
                      Nom = "Compte épargne",

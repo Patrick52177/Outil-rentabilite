@@ -120,56 +120,44 @@ namespace OutilRentabilite.Controllers
             return RedirectToAction("Historique");
         }
         [HttpGet]
-        public IActionResult Analyse()
+        public IActionResult Analyse(DateTime? dateDebut, DateTime? dateFin)
         {
-            var analyses = _context.ProduitsFinanciers
+            var simulations = _context.ProduitsFinanciers
                 .Include(p => p.Simulations)
                 .ThenInclude(s => s.Resultat)
-                .ToList() // ⚠️ Charger les données en mémoire pour éviter les erreurs Oracle
                 .Select(p => new
                 {
                     Nom = p.Nom,
-                    Type = p.TypeProduit,
-                    NbSimulation = p.Simulations.Count,
-                    HasResultats = p.Simulations.Any(s => s.Resultat != null),
-
-                    MoyenneRevenu = p.Simulations.Any(s => s.Resultat != null)
-                        ? p.Simulations.Where(s => s.Resultat != null).Average(s => s.Resultat.RevenuTotal)
-                        : 0,
-
-                    MoyenneCout = p.Simulations.Any(s => s.Resultat != null)
-                        ? p.Simulations.Where(s => s.Resultat != null).Average(s => s.Resultat.CoutTotal)
-                        : 0,
-
-                    MoyenneBenefice = p.Simulations.Any(s => s.Resultat != null)
-                        ? p.Simulations.Where(s => s.Resultat != null).Average(s => s.Resultat.BeneficeNet)
-                        : 0,
-
-                    MoyenneMargeBrute = p.Simulations.Any(s => s.Resultat != null)
-                        ? p.Simulations.Where(s => s.Resultat != null).Average(s => s.Resultat.MargeBrute)
-                        : 0,
-
-                    MoyenneMargeNette = p.Simulations.Any(s => s.Resultat != null)
-                        ? p.Simulations.Where(s => s.Resultat != null).Average(s => s.Resultat.MargeNette)
-                        : 0,
-
-                    MoyenneROI = p.Simulations.Any(s => s.Resultat != null)
-                        ? p.Simulations.Where(s => s.Resultat != null).Average(s => s.Resultat.ROI)
-                        : 0,
-
-                    MoyenneROE = p.Simulations.Any(s => s.Resultat != null)
-                        ? p.Simulations.Where(s => s.Resultat != null).Average(s => s.Resultat.ROE)
-                        : 0,
-
-                    MoyenneROA = p.Simulations.Any(s => s.Resultat != null)
-                        ? p.Simulations.Where(s => s.Resultat != null).Average(s => s.Resultat.ROA)
-                        : 0
+                    TypeProduit = p.TypeProduit,
+                    Simulations = p.Simulations
+                        .Where(s => s.Resultat != null &&
+                                    (!dateDebut.HasValue || s.DateSimulation >= dateDebut.Value) &&
+                                    (!dateFin.HasValue || s.DateSimulation <= dateFin.Value))
+                        .ToList()
+                })
+                .Where(x => x.Simulations.Any())
+                .Select(p => new AnalyseProduitViewModel
+                {
+                    Nom = p.Nom,
+                    TypeProduit = p.TypeProduit,
+                    RevenuMoyen = p.Simulations.Average(s => (decimal?)s.Resultat.RevenuTotal) ?? 0,
+                    BeneficeMoyen = p.Simulations.Average(s => (decimal?)s.Resultat.BeneficeNet) ?? 0
                 })
                 .ToList();
 
-            ViewBag.AnalyseParProduit = analyses;
+            var produitPlusRentable = simulations
+                .Where(p => p.BeneficeMoyen > 0)
+                .OrderByDescending(p => p.BeneficeMoyen)
+                .FirstOrDefault();
 
-            return View();
+            ViewBag.MeilleurProduitMessage = produitPlusRentable != null
+                ? $"✅ Le produit financier le plus rentable est : <strong>{produitPlusRentable.Nom}</strong> ({produitPlusRentable.TypeProduit}) avec un bénéfice moyen de <strong>{produitPlusRentable.BeneficeMoyen:N0} Ar</strong>."
+                : "❌ Aucun produit rentable trouvé dans la période sélectionnée.";
+
+            ViewBag.DateDebut = dateDebut?.ToString("yyyy-MM-dd");
+            ViewBag.DateFin = dateFin?.ToString("yyyy-MM-dd");
+
+            return View(simulations);
         }
 
     }
