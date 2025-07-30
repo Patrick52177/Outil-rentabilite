@@ -60,7 +60,14 @@
             <li><strong>ROE (Return on Equity) :</strong> @Model.Resultat.ROE.ToString("N2") %</li>
         }
 
+
     </ul>
+    @if (ViewBag.MessageDiagnostic != null)
+    {
+        <div class="alert alert-info">
+            <strong>@ViewBag.MessageDiagnostic</strong>
+        </div>
+    }
 
     <hr />
   

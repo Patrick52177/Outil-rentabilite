@@ -89,6 +89,25 @@ namespace OutilRentabilite.Controllers
                 return NotFound();
             ViewBag.NomProduit = simulation.ProduitFinancier?.Nom ?? "Inconnu";
             ViewBag.TypeProduit = simulation.ProduitFinancier?.TypeProduit ?? "Inconnu";
+            if (simulation.Resultat != null)
+            {
+                var benefice = simulation.Resultat.BeneficeNet;
+                var marge = simulation.Resultat.MargeBrute;
+
+                if (benefice <= 0)
+                {
+                    ViewBag.MessageDiagnostic = "❌ Ce produit n’est pas rentable. Envisagez d’augmenter le taux d’intérêt ou de réduire les coûts.";
+                }
+                else if (marge < 10)
+                {
+                    ViewBag.MessageDiagnostic = "⚠️ Rentabilité faible. Vous pouvez optimiser les frais ou ajuster la durée.";
+                }
+                else
+                {
+                    ViewBag.MessageDiagnostic = "✔️ Ce produit est rentable.";
+                }
+            }
+
 
             return View(simulation);
         }
