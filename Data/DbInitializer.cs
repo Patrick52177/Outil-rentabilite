@@ -28,6 +28,11 @@ public static class DbInitializer
                      Nom = "Compte épargne",
                      TypeProduit = "Epargne",
                  },
+                 new ProduitFinancier
+                 {
+                     Nom = "Compte Retraite",
+                     TypeProduit = "Epargne",
+                 },
                   new ProduitFinancier
                   {
                       Nom = "Carte bancaire",

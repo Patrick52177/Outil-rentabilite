@@ -122,43 +122,45 @@ namespace OutilRentabilite.Controllers
         [HttpGet]
         public IActionResult Analyse(DateTime? dateDebut, DateTime? dateFin)
         {
-            var simulations = _context.ProduitsFinanciers
+            var produits = _context.ProduitsFinanciers
                 .Include(p => p.Simulations)
                 .ThenInclude(s => s.Resultat)
-                .Select(p => new
-                {
-                    Nom = p.Nom,
-                    TypeProduit = p.TypeProduit,
-                    Simulations = p.Simulations
-                        .Where(s => s.Resultat != null &&
-                                    (!dateDebut.HasValue || s.DateSimulation >= dateDebut.Value) &&
-                                    (!dateFin.HasValue || s.DateSimulation <= dateFin.Value))
-                        .ToList()
-                })
-                .Where(x => x.Simulations.Any())
-                .Select(p => new AnalyseProduitViewModel
-                {
-                    Nom = p.Nom,
-                    TypeProduit = p.TypeProduit,
-                    RevenuMoyen = p.Simulations.Average(s => (decimal?)s.Resultat.RevenuTotal) ?? 0,
-                    BeneficeMoyen = p.Simulations.Average(s => (decimal?)s.Resultat.BeneficeNet) ?? 0
-                })
+                .Where(p => p.Simulations.Any(s => s.Resultat != null &&
+                    (!dateDebut.HasValue || s.DateSimulation >= dateDebut.Value) &&
+                    (!dateFin.HasValue || s.DateSimulation <= dateFin.Value)))
                 .ToList();
 
-            var produitPlusRentable = simulations
-                .Where(p => p.BeneficeMoyen > 0)
-                .OrderByDescending(p => p.BeneficeMoyen)
-                .FirstOrDefault();
+            var analyses = produits.Select(p => new AnalyseProduitViewModel
+            {
+                Nom = p.Nom,
+                TypeProduit = p.TypeProduit,
+                RevenuMoyen = p.Simulations
+                    .Where(s => s.Resultat != null &&
+                        (!dateDebut.HasValue || s.DateSimulation >= dateDebut.Value) &&
+                        (!dateFin.HasValue || s.DateSimulation <= dateFin.Value))
+                    .Average(s => (decimal?)s.Resultat.RevenuTotal) ?? 0,
+                BeneficeMoyen = p.Simulations
+                    .Where(s => s.Resultat != null &&
+                        (!dateDebut.HasValue || s.DateSimulation >= dateDebut.Value) &&
+                        (!dateFin.HasValue || s.DateSimulation <= dateFin.Value))
+                    .Average(s => (decimal?)s.Resultat.BeneficeNet) ?? 0
+            }).ToList();
 
-            ViewBag.MeilleurProduitMessage = produitPlusRentable != null
-                ? $"✅ Le produit financier le plus rentable est : <strong>{produitPlusRentable.Nom}</strong> ({produitPlusRentable.TypeProduit}) avec un bénéfice moyen de <strong>{produitPlusRentable.BeneficeMoyen:N0} Ar</strong>."
-                : "❌ Aucun produit rentable trouvé dans la période sélectionnée.";
+            // Trouver le produit le plus rentable par type
+            var meilleursProduits = analyses
+                .Where(a => a.BeneficeMoyen > 0)
+                .GroupBy(a => a.TypeProduit)
+                .Select(g => g.OrderByDescending(p => p.BeneficeMoyen).First())
+                .ToList();
+
+            ViewBag.MeilleursProduits = meilleursProduits;
 
             ViewBag.DateDebut = dateDebut?.ToString("yyyy-MM-dd");
             ViewBag.DateFin = dateFin?.ToString("yyyy-MM-dd");
 
-            return View(simulations);
+            return View(analyses);
         }
+
 
     }
 }
