@@ -62,12 +62,14 @@
 
 
     </ul>
-    @if (ViewBag.MessageDiagnostic != null)
+    @if (ViewBag.Suggestion != null)
     {
-        <div class="alert alert-info">
-            <strong>@ViewBag.MessageDiagnostic</strong>
+        <div class="alert alert-info mt-4">
+            <strong>Suggestion d’ajustement :</strong> @ViewBag.Suggestion
         </div>
     }
+   
+
 
     <hr />
   

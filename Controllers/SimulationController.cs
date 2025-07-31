@@ -93,25 +93,26 @@ namespace OutilRentabilite.Controllers
             {
                 var benefice = simulation.Resultat.BeneficeNet;
                 var marge = simulation.Resultat.MargeBrute;
-
-                if (benefice <= 0)
-                {
-                    ViewBag.MessageDiagnostic = "❌ Ce produit n’est pas rentable. Envisagez d’augmenter le taux d’intérêt ou de réduire les coûts.";
-                }
-                else if (marge < 10)
-                {
-                    ViewBag.MessageDiagnostic = "⚠️ Rentabilité faible. Vous pouvez optimiser les frais ou ajuster la durée.";
-                }
-                else
-                {
-                    ViewBag.MessageDiagnostic = "✔️ Ce produit est rentable.";
-                }
+                var ajustement = GenererSuggestion(simulation.Resultat);
+                ViewBag.Suggestion = ajustement;
             }
 
 
             return View(simulation);
         }
+        private string GenererSuggestion(ResultatSimulation resultat)
+        {
+            if (resultat.MargeNette < 20)
+                return "La marge nette est faible. Essayez d’augmenter le taux d’intérêt ou de réduire les coûts.";
 
+            if (resultat.ROI < 50)
+                return "Le ROI est bas. Envisagez d’optimiser l’investissement ou de revoir la stratégie du produit.";
+
+            if (resultat.BeneficeNet < 0)
+                return "Ce produit génère une perte. Réévaluez les paramètres financiers ou envisagez l’arrêt du produit.";
+
+            return "Les indicateurs sont bons. Aucun ajustement nécessaire.";
+        }
         public IActionResult Historique()
         {
             var simulations = _context.ParametresSimulations

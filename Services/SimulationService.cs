@@ -3,7 +3,9 @@
 namespace OutilRentabilite.Services;
 
 public class SimulationService
-{
+{    
+
+
     public ResultatSimulation CalculerResultat(ParametresSimulation param, ProduitFinancier produit)
     {
         decimal coutfinance = param.Montant * param.CoutFinancement/100 * param.DureeMois / 12 * param.NombreOffre;

@@ -22,4 +22,5 @@ public class ResultatSimulation
     [Required]
     [ForeignKey("ParametresSimulationId")]
     public ParametresSimulation? parametresSimulation { get; set; }
+
 }

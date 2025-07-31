@@ -10,8 +10,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<SimulationService>();
 
-
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
