@@ -67,14 +67,27 @@ namespace OutilRentabilite.Controllers
 
             param.DateSimulation = DateTime.Now;
             // Appel au service de calcul
-            param.Resultat = _service.CalculerResultat(param, produit);
+            // Calcul des résultats
+            var resultat = _service.CalculerResultat(param, produit);
+            param.Resultat = resultat;
 
+            // Enregistrement en base
             _context.ParametresSimulations.Add(param);
             _context.SaveChanges();
-            
-            
 
-            return RedirectToAction("Resultat", new { id = param.Id });
+            // Générer la suggestion automatiquement
+            string suggestion = "";
+
+            if (resultat.MargeNette < 20)
+                suggestion = "⚠️ Marge faible : Réduisez les coûts ou augmentez le taux.";
+            else if (resultat.ROI < 10)
+                suggestion = "⚠️ ROI faible : Optimisez les frais ou augmentez les volumes.";
+            else
+                suggestion = "✅ Produit rentable. Aucun ajustement nécessaire.";
+
+            ViewBag.Suggestion = suggestion;
+
+            return PartialView("_ResultatSimulation", param);
         }
 
         // Étape 4 : Afficher les résultats
@@ -118,6 +131,7 @@ namespace OutilRentabilite.Controllers
             var simulations = _context.ParametresSimulations
                 .Include(p => p.ProduitFinancier)
                 .Include(p => p.Resultat)
+
                 .OrderByDescending(p => p.DateSimulation)
                 .ToList();
 
@@ -180,6 +194,26 @@ namespace OutilRentabilite.Controllers
 
             return View(analyses);
         }
+        [HttpPost]
+        public IActionResult SimulerInline(ParametresSimulation param)
+        {
+            try
+            {
+                var produit = _context.ProduitsFinanciers.Find(param.ProduitFinancierId);
+                if (produit == null)
+                    return BadRequest("Produit introuvable");
+
+                param.DateSimulation = DateTime.Now;
+                param.Resultat = _service.CalculerResultat(param, produit);
+
+                return PartialView("_ResultatSimulation", param.Resultat);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erreur : " + ex.Message);
+            }
+        }
+
 
 
     }

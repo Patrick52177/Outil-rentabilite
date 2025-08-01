@@ -6,129 +6,124 @@
 
 @{
     ViewData["Title"] = "Nouvelle simulation";
-    var produits = ViewBag.Produits as List<OutilRentabilite.Models.ProduitFinancier>;
 }
 
 <h2>Nouvelle simulation</h2>
 
-@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-<form asp-action="Create" method="post">
+<form id="form-simulation" method="post" class="row g-2 align-items-end mb-3">
     @if (ViewBag.NomProduit != null)
     {
         <div class="alert alert-info">Produit :<strong>@ViewBag.TypeProduit</strong></div>
 
-        <input type="hidden" asp-for="ProduitFinancierId"/>
-
     }
-    else
-    {
-        <div class="alert alert-info">
-            <strong>
-                Aucune Produit
-            </strong>
 
-        </div>
-    }
-    <div class="form-group">
-        <label for="Montant">Montant</label>
-        <input asp-for="Montant" class="form-control" />
-        <span asp-validation-for="Montant" class="text-danger"></span>
+    <input type="hidden" asp-for="ProduitFinancierId" />
+    <div class="col">
+        <label>Montant</label>
+        <input type="number" name="Montant" class="form-control" required />
     </div>
-    <div class="form-group">
-        <label for="DureeMois">Mois</label>
-        <input asp-for="DureeMois" class="form-control" />
-        <span asp-validation-for="DureeMois" class="text-danger"></span>
+    <div class="col">
+        <label>Durée (mois)</label>
+        <input type="number" name="DureeMois" class="form-control" required />
     </div>
 
     @{
-        var typeProduit = ((string)ViewBag.TypeProduit)?.ToLower();
+        var typeProduit = ((string)ViewBag.TypeProduit)?.ToLower(); // indiquer le type de produit
     } 
     @if (typeProduit == "crédit")
     {
-        <div class="form-group">
-            <label for="NombreOffre">Nombre de Client estimé</label>
-            <input asp-for="NombreOffre" class="form-control" />
-            <span asp-validation-for="NombreOffre" class="text-danger"></span>
+        <div class="col">
+            <label>Nombre de Client estimé</label>
+            <input type="number" name="NombreOffre" class="form-control" step="0.01" required />
         </div>
 
-        <div class="form-group">
-            <label for="TauxInteret">Taux d'intérêt</label>
-            <input asp-for="TauxInteret" class="form-control" />
-            <span asp-validation-for="TauxInteret" class="text-danger"></span>
+        <div class="col">
+            <label>Taux d’intérêt (%)</label>
+            <input type="number" name="TauxInteret" class="form-control" step="0.01" required />
         </div>
 
-        <div class="form-group">
-            <label for="FraisDossier">Frais de dossier</label>
-            <input asp-for="FraisDossier" class="form-control" />
-            <span asp-validation-for="FraisDossier" class="text-danger"></span>
+        <div class="col">
+            <label>Frais de dossier (Ar)</label>
+            <input type="number" name="FraisDossier" class="form-control" step="100" required />
         </div>
-        <div class="form-group">
-            <label for="CoutOperationel">Coût opérationnel</label>
-            <input asp-for="CoutOperationnel" class="form-control" />
-            <span asp-validation-for="CoutOperationnel" class="text-danger"></span>
+        <div class="col">
+            <label>Coût Financement (%)</label>
+            <input type="number" name="CoutFinancement" class="form-control" step="0.01" required />
         </div>
-        <div class="form-group">
-            <label for="CoutRisque">Coût de Risque</label>
-            <input asp-for="CoutRisque" class="form-control" />
-            <span asp-validation-for="CoutRisque" class="text-danger"></span>
+        <div class="col">
+            <label>Coût Risque (%)</label>
+            <input type="number" name="CoutRisque" class="form-control" step="0.01" required />
         </div>
-        <div class="form-group">
-            <label for="CoutFinancement">Coût de Financement</label>
-            <input asp-for="CoutFinancement" class="form-control" />
-            <span asp-validation-for="CoutFinancement" class="text-danger"></span>
+        <div class="col">
+            <label>Coût Opérationnel (Ar)</label>
+            <input type="number" name="CoutOperationnel" class="form-control" step="100" required />
         </div>
-        <div class="form-group">
-            <label for="TotalActif">Investissement Initiale</label>
-            <input asp-for="TotalActif" class="form-control" />
-            <span asp-validation-for="TotalActif" class="text-danger"></span>
+        <div class="col">
+            <label>Total actif</label>
+            <input type="number" name="TotalActif" class="form-control" value="1000000" required />
         </div>
+
 
     }
     @if (typeProduit == "epargne")
     {
-
-        <div class="form-group">
-            <label for="NombreOffre">Nombre de Client estimé</label>
-            <input asp-for="NombreOffre" class="form-control" />
-            <span asp-validation-for="NombreOffre" class="text-danger"></span>
+        <div class="col">
+            <label>Nombre de Client estimé</label>
+            <input type="number" name="NombreOffre" class="form-control" step="0.01" required />
         </div>
 
-        <div class="form-group">
-            <label for="TauxInteret">Taux d'intérêt (épargne)</label>
-            <input asp-for="TauxInteret" class="form-control" />
-            <span asp-validation-for="TauxInteret" class="text-danger"></span>
+
+        <div class="col">
+            <label>Taux d’intérêt (%)</label>
+            <input type="number" name="TauxInteret" class="form-control" step="0.01" required />
         </div>
-        <div class="form-group">
-            <label for="FraisGestion">Frais de gestion</label>
-            <input asp-for="FraisGestion" class="form-control" />
-            <span asp-validation-for="FraisGestion" class="text-danger"></span>
+
+        <div class="col">
+            <label>Frais de gestion</label>
+            <input type="number" name="FraisGestion" class="form-control" step="100" required />
         </div>
 
     }
     @if (typeProduit == "services")
     {
-        <div class="form-group">
-            <label for="CoutFinancement">Coût service client</label>
-            <input asp-for=CoutFinancement" class="form-control" />
-            <span asp-validation-for="CoutFinancement" class="text-danger"></span>
+        <div class="col">
+            <label>Coût service client</label>
+            <input type="number" name="CoutFinancement" class="form-control" step="0.01" required />
         </div>
-        <div class="form-group">
-            <label for="CoutOperationel">Coût IT par opération</label>
-            <input asp-for="CoutOperationnel" class="form-control" />
-            <span asp-validation-for="CoutOperationnel" class="text-danger"></span>
+        <div class="col">
+            <label>Coût IT par opération</label>
+            <input type="number" name="CoutOperationnel" class="form-control" step="100" required />
         </div>
-        <div class="form-group">
-            <label for="FondsPropres">Fonds Propres</label>
-            <input asp-for="FondsPropres" class="form-control" />
-            <span asp-validation-for="FondsPropres" class="text-danger"></span>
+        <div class="col">
+            <label>Fonds propres (si service)</label>
+            <input type="number" name="FondsPropres" class="form-control" step="1000" />
         </div>
-
     }  
  
-    <button type="submit" class="btn btn-primary mt-3">Lancer</button>
+    <div class="col">
+        <button type="submit" class="btn btn-primary">Simuler</button>
+    </div>
 </form>
+<div id="resultat-container" class="mt-4"></div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#form-simulation').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Create", "Simulation")',
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        $('#resultat-container').html(result);
+                    },
+                    error: function () {
+                        $('#resultat-container').html("<div class='alert alert-danger'>Une erreur est survenue lors de la simulation.</div>");
+                    }
+                });
+            });
+        });
+    </script>
 }
