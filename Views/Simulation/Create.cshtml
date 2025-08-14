@@ -1,110 +1,130 @@
 ﻿@model OutilRentabilite.Models.ParametresSimulation
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-
-@{
     ViewData["Title"] = "Nouvelle simulation";
 }
 
-<h2>Nouvelle simulation</h2>
+<div class="container py-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-calculator"></i> Nouvelle simulation
+            </h4>
+        </div>
+        <div class="card-body">
 
-<form id="form-simulation" method="post" class="row g-2 align-items-end mb-3">
-    @if (ViewBag.NomProduit != null)
-    {
-        <div class="alert alert-info">Produit :<strong>@ViewBag.TypeProduit</strong></div>
+            @if (ViewBag.NomProduit != null)
+            {
+                <div class="alert alert-info mb-4">
+                    <strong>Produit :</strong> @ViewBag.TypeProduit
+                </div>
+            }
 
-    }
+            <form id="form-simulation" method="post">
+                <input type="hidden" asp-for="ProduitFinancierId" />
 
-    <input type="hidden" asp-for="ProduitFinancierId" />
-    <div class="col">
-        <label>Montant</label>
-        <input type="number" name="Montant" class="form-control" required />
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Montant</label>
+                        <input type="number" name="Montant" class="form-control" placeholder="Ex: 5000000" required />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Durée (mois)</label>
+                        <input type="number" name="DureeMois" class="form-control" placeholder="Ex: 36" required />
+                    </div>
+
+                    @{
+                        var typeProduit = ((string)ViewBag.TypeProduit)?.ToLower();
+                    }
+
+                    @if (typeProduit == "crédit")
+                    {
+                        <div class="col-md-4">
+                            <label class="form-label">Nombre de Clients estimé</label>
+                            <input type="number" name="NombreOffre" class="form-control" step="0.01" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Taux d’intérêt (%)</label>
+                            <input type="number" name="TauxInteret" class="form-control" step="0.01" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Frais de dossier (Ar)</label>
+                            <input type="number" name="FraisDossier" class="form-control" step="100" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Coût Financement (%)</label>
+                            <input type="number" name="CoutFinancement" class="form-control" step="0.01" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Coût Risque (%)</label>
+                            <input type="number" name="CoutRisque" class="form-control" step="0.01" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Coût Opérationnel (Ar)</label>
+                            <input type="number" name="CoutOperationnel" class="form-control" step="100" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Total actif</label>
+                            <input type="number" name="TotalActif" class="form-control" value="1000000" required />
+                        </div>
+                    }
+
+                    @if (typeProduit == "epargne")
+                    {
+                        <div class="col-md-4">
+                            <label class="form-label">Nombre de Clients estimé</label>
+                            <input type="number" name="NombreOffre" class="form-control" step="0.01" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Taux d’intérêt (%)</label>
+                            <input type="number" name="TauxInteret" class="form-control" step="0.01" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Frais de gestion</label>
+                            <input type="number" name="FraisGestion" class="form-control" step="100" required />
+                        </div>
+                    }
+
+                    @if (typeProduit == "services")
+                    {
+                        <div class="col-md-4">
+                            <label class="form-label">Coût service client</label>
+                            <input type="number" name="CoutFinancement" class="form-control" step="0.01" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Coût IT par opération</label>
+                            <input type="number" name="CoutOperationnel" class="form-control" step="100" required />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Fonds propres (si service)</label>
+                            <input type="number" name="FondsPropres" class="form-control" step="1000" />
+                        </div>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" id="btn-simuler" class="btn btn-lg btn-primary">
+                        <span class="spinner-border spinner-border-sm me-2 d-none" id="loader"></span>
+                        Simuler
+                    </button>
+                </div>
+            </form>
+
+            <div id="resultat-container" class="mt-4"></div>
+        </div>
     </div>
-    <div class="col">
-        <label>Durée (mois)</label>
-        <input type="number" name="DureeMois" class="form-control" required />
-    </div>
-
-    @{
-        var typeProduit = ((string)ViewBag.TypeProduit)?.ToLower(); // indiquer le type de produit
-    } 
-    @if (typeProduit == "crédit")
-    {
-        <div class="col">
-            <label>Nombre de Client estimé</label>
-            <input type="number" name="NombreOffre" class="form-control" step="0.01" required />
-        </div>
-
-        <div class="col">
-            <label>Taux d’intérêt (%)</label>
-            <input type="number" name="TauxInteret" class="form-control" step="0.01" required />
-        </div>
-
-        <div class="col">
-            <label>Frais de dossier (Ar)</label>
-            <input type="number" name="FraisDossier" class="form-control" step="100" required />
-        </div>
-        <div class="col">
-            <label>Coût Financement (%)</label>
-            <input type="number" name="CoutFinancement" class="form-control" step="0.01" required />
-        </div>
-        <div class="col">
-            <label>Coût Risque (%)</label>
-            <input type="number" name="CoutRisque" class="form-control" step="0.01" required />
-        </div>
-        <div class="col">
-            <label>Coût Opérationnel (Ar)</label>
-            <input type="number" name="CoutOperationnel" class="form-control" step="100" required />
-        </div>
-        <div class="col">
-            <label>Total actif</label>
-            <input type="number" name="TotalActif" class="form-control" value="1000000" required />
-        </div>
-
-
-    }
-    @if (typeProduit == "epargne")
-    {
-        <div class="col">
-            <label>Nombre de Client estimé</label>
-            <input type="number" name="NombreOffre" class="form-control" step="0.01" required />
-        </div>
-
-
-        <div class="col">
-            <label>Taux d’intérêt (%)</label>
-            <input type="number" name="TauxInteret" class="form-control" step="0.01" required />
-        </div>
-
-        <div class="col">
-            <label>Frais de gestion</label>
-            <input type="number" name="FraisGestion" class="form-control" step="100" required />
-        </div>
-
-    }
-    @if (typeProduit == "services")
-    {
-        <div class="col">
-            <label>Coût service client</label>
-            <input type="number" name="CoutFinancement" class="form-control" step="0.01" required />
-        </div>
-        <div class="col">
-            <label>Coût IT par opération</label>
-            <input type="number" name="CoutOperationnel" class="form-control" step="100" required />
-        </div>
-        <div class="col">
-            <label>Fonds propres (si service)</label>
-            <input type="number" name="FondsPropres" class="form-control" step="1000" />
-        </div>
-    }  
- 
-    <div class="col">
-        <button type="submit" class="btn btn-primary">Simuler</button>
-    </div>
-</form>
-<div id="resultat-container" class="mt-4"></div>
+</div>
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -112,6 +132,9 @@
         $(document).ready(function () {
             $('#form-simulation').submit(function (e) {
                 e.preventDefault();
+                $('#loader').removeClass('d-none');
+                $('#btn-simuler').prop('disabled', true);
+
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("Create", "Simulation")',
@@ -121,6 +144,10 @@
                     },
                     error: function () {
                         $('#resultat-container').html("<div class='alert alert-danger'>Une erreur est survenue lors de la simulation.</div>");
+                    },
+                    complete: function () {
+                        $('#loader').addClass('d-none');
+                        $('#btn-simuler').prop('disabled', false);
                     }
                 });
             });

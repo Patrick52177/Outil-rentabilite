@@ -1,84 +1,119 @@
 ﻿@model OutilRentabilite.Models.ParametresSimulation
 @{
     ViewData["Title"] = "Résultat de Simulation";
-    
-}
-
-@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var typeProduit = ((string)ViewBag.TypeProduit)?.ToLower();
 }
-
-<h2>Résultats</h2>
 
 @if (Model.Resultat != null)
 {
-    <h2 class="mt-4">📌 Résultat de la simulation</h2>
-
-    <div class="card mt-4 p-4 shadow-sm">
-        <h4>🟩 Produit : @ViewBag.TypeProduit</h4>
-        <p><strong>Durée :</strong> @Model.DureeMois mois</p>
-        <p><strong>Montant :</strong> @Model.Montant.ToString("N0") Ar</p>
-    </div>
-
-    <hr />
-
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <h4>💰 Résumé Financier</h4>
-            <ul>
-                <li><strong>Revenu total :</strong> @Model.Resultat.RevenuTotal.ToString("N0") Ar</li>
-                <li><strong>Coût total :</strong> @Model.Resultat.CoutTotal.ToString("N0") Ar</li>
-                <li><strong>Bénéfice net :</strong> @Model.Resultat.BeneficeNet.ToString("N0") Ar</li>
-            </ul>
+    <div class="container mt-4">
+        <!-- Titre et infos produit -->
+        <div class="card shadow border-0 mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-info-circle-fill me-2"></i> Informations sur la simulation
+            </div>
+            <div class="card-body">
+                <p><strong>Produit :</strong> @ViewBag.TypeProduit</p>
+                <p><strong>Montant :</strong> @Model.Montant.ToString("N0") Ar</p>
+                <p><strong>Durée :</strong> @Model.DureeMois mois</p>
+            </div>
         </div>
-        <div class="col-md-6">
-            <h4>📊 Marges</h4>
-            <ul>
-                <li><strong>Marge brute :</strong> @Model.Resultat.MargeBrute.ToString("N2") %</li>
-                <li><strong>Marge nette :</strong>  @Model.Resultat.MargeNette.ToString("N2") %</li>
-            </ul>
+
+        <!-- Indicateurs financiers -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4 col-6">
+                <div class="p-3 bg-light rounded shadow-sm text-center">
+                    <i class="bi bi-cash-coin text-success fs-3"></i>
+                    <h6 class="mt-2">Revenu total</h6>
+                    <strong class="text-success">@Model.Resultat.RevenuTotal.ToString("N0") Ar</strong>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="p-3 bg-light rounded shadow-sm text-center">
+                    <i class="bi bi-wallet2 text-danger fs-3"></i>
+                    <h6 class="mt-2">Coût total</h6>
+                    <strong class="text-danger">@Model.Resultat.CoutTotal.ToString("N0") Ar</strong>
+                </div>
+            </div>
+            <div class="col-md-4 col-6">
+                <div class="p-3 bg-light rounded shadow-sm text-center">
+                    <i class="bi bi-graph-up-arrow text-primary fs-3"></i>
+                    <h6 class="mt-2">Bénéfice net</h6>
+                    <strong class="text-primary">@Model.Resultat.BeneficeNet.ToString("N0") Ar</strong>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-6">
+                <div class="p-3 bg-light rounded shadow-sm text-center">
+                    <i class="bi bi-percent text-warning fs-3"></i>
+                    <h6 class="mt-2">Marge brute</h6>
+                    <strong>@Model.Resultat.MargeBrute.ToString("N2") %</strong>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="p-3 bg-light rounded shadow-sm text-center">
+                    <i class="bi bi-percent text-warning fs-3"></i>
+                    <h6 class="mt-2">Marge nette</h6>
+                    <strong>@Model.Resultat.MargeNette.ToString("N2") %</strong>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="p-3 bg-light rounded shadow-sm text-center">
+                    <i class="bi bi-pie-chart-fill text-info fs-3"></i>
+                    <h6 class="mt-2">ROI</h6>
+                    <strong>@Model.Resultat.ROI.ToString("N2") %</strong>
+                </div>
+            </div>
+
+            @if (typeProduit != "services")
+            {
+                <div class="col-md-3 col-6">
+                    <div class="p-3 bg-light rounded shadow-sm text-center">
+                        <i class="bi bi-briefcase-fill text-secondary fs-3"></i>
+                        <h6 class="mt-2">ROE</h6>
+                        <strong>@Model.Resultat.ROE.ToString("N2") %</strong>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-3 bg-light rounded shadow-sm text-center">
+                        <i class="bi bi-building text-dark fs-3"></i>
+                        <h6 class="mt-2">ROA</h6>
+                        <strong>@Model.Resultat.ROA.ToString("N2") %</strong>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-3 bg-light rounded shadow-sm text-center">
+                        <i class="bi bi-clock-history text-muted fs-3"></i>
+                        <h6 class="mt-2">Payback Period</h6>
+                        <strong>@Model.Resultat.PaybackPeriod.ToString("N2") mois</strong>
+                    </div>
+                </div>
+            }
         </div>
-    </div>
 
-    <hr />
-
-    <h4 class="mt-4">📈 Indicateurs Financiers</h4>
-    <ul>
-        <li><strong>ROI (Return on Investment) :</strong> @Model.Resultat.ROI.ToString("N2") %</li>
-        @{
-            var typeProduit = ((string)ViewBag.TypeProduit)?.ToLower();
+        <!-- Suggestion -->
+        @if (ViewBag.Suggestion != null)
+        {
+            <div class="alert @((ViewBag.Suggestion?.ToString().Contains("⚠️") ?? false) ? "alert-warning" : "alert-success") shadow-sm">
+                <i class="bi bi-lightbulb-fill me-2"></i>
+                <strong>Suggestion :</strong> @ViewBag.Suggestion
+            </div>
         }
 
-        @if (typeProduit != "services")
-        {
-            <li><strong>ROA (Return on Assets) :</strong> @Model.Resultat.ROA.ToString("N2") %</li>
-            <li><strong>ROE (Return on Equity) :</strong> @Model.Resultat.ROE.ToString("N3") %</li>
-            <li><strong>Payback Period :</strong> @Model.Resultat.PaybackPeriod.ToString("N2") mois</li>
-        } 
-        else
-        {
-            <li><strong>ROE (Return on Equity) :</strong> @Model.Resultat.ROE.ToString("N2") %</li>
-        }
-
-
-    </ul>
-    @if (ViewBag.Suggestion != null)
-    {
-        <div class="alert alert-info mt-4">
-            <strong>Suggestion d’ajustement :</strong> @ViewBag.Suggestion
+        <!-- Bouton retour -->
+        <div class="mt-4">
+            <a asp-action="Historique" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-1"></i> Retour à l'historique
+            </a>
         </div>
-    }
-   
-
-
-    <hr />
-  
-
-
+    </div>
 }
 else
 {
-    <p>Aucun résultat</p>
+    <div class="alert alert-warning">Aucun résultat trouvé pour cette simulation.</div>
 }
 
-<a asp-action="ChoisirProduit" class="btn btn-secondary mt-3">🔄 Faire une autre simulation</a>
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+}
