@@ -5,13 +5,13 @@
     <div class="card border-success">
         <div class="card-header bg-success text-white">Résultat de la Simulation</div>
         <div class="card-body">
-            <p><strong>Revenu total :</strong> @Model.Resultat.RevenuTotal:N0 Ar</p>
-            <p><strong>Coût total :</strong> @Model.Resultat.CoutTotal:N0 Ar</p>
-            <p><strong>Bénéfice net :</strong> @Model.Resultat.BeneficeNet:N0 Ar</p>
-            <p><strong>Marge nette :</strong> @Model.Resultat.MargeNette:F2 %</p>
-            <p><strong>ROI :</strong> @Model.Resultat.ROI:F2 %</p>
-            <p><strong>ROE :</strong> @Model.Resultat.ROE:F2 %</p>
-            <p><strong>ROA :</strong> @Model.Resultat.ROA:F2 %</p>
+            <p><strong>Revenu total :</strong> @Model.Resultat.RevenuTotal.ToString("N0") Ar</p>
+            <p><strong>Coût total :</strong> @Model.Resultat.CoutTotal.ToString("N0") Ar</p>
+            <p><strong>Bénéfice net :</strong> @Model.Resultat.BeneficeNet.ToString("N0") Ar</p>
+            <p><strong>Marge nette :</strong> @Model.Resultat.MargeNette.ToString("F2") %</p>
+            <p><strong>ROI :</strong> @Model.Resultat.ROI.ToString("F2") %</p>
+            <p><strong>ROE :</strong> @Model.Resultat.ROE.ToString("F2") %</p>
+            <p><strong>ROA :</strong> @Model.Resultat.ROA.ToString("F2") %</p>
             <hr />
             <div class="alert alert-warning">
                 <strong>Suggestion :</strong> @ViewBag.Suggestion

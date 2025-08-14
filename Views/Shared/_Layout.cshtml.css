@@ -13,8 +13,8 @@ a {
 
 .btn-primary {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: #c2421b;
+  border-color: #fdfeff;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
@@ -38,11 +38,57 @@ button.accept-policy {
   font-size: 1rem;
   line-height: inherit;
 }
+ .app-root { display: flex; height: 100vh; overflow: hidden; }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
-}
+        :root {
+            --cem-red: #e60012; 
+            --cem-light: #fff5f5; 
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: #e60012!important;
+            color: #ffffff !important;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
+        .sidebar .brand {
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            margin-bottom: 1rem;
+        }
+        .sidebar .nav-link {
+            color: #ffffff !important;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+        }
+        .sidebar .nav-link:hover { 
+            background: rgba(255, 255, 255, 0.2); 
+            color: #ffffff !important; 
+        }
+
+        /* Main area */
+        .main-area { flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; }
+
+        /* Top bar */
+        .topbar {
+            height: 56px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            background: #ffffff;
+        }
+
+        /* Content */
+        .content { padding: 1.25rem; overflow: auto; height: calc(100vh - 56px); }
+
+        @media (max-width: 991.98px) {
+            .sidebar { position: fixed; left: -320px; top: 0; height: 100vh; z-index: 1030; transition: left .22s ease; }
+            .sidebar.show { left: 0; }
+            .app-root.sidebar-open .overlay { display: block; }
+            .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 1020; }
+        }

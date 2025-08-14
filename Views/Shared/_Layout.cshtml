@@ -10,61 +10,53 @@
     <link rel="stylesheet" href="~/OutilRentabilite.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">OutilRentabilite</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <div class="app-root" id="appRoot">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="brand d-flex align-items-center">
+                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                        <rect width="24" height="24" rx="6" fill="#fff5f5" />
+                        <path d="M7 12h10M7 8h6" stroke="red" stroke-width="1.4" stroke-linecap="round"/>
+                    </svg>
+                    Outil Rentabilité
                 </div>
+                <button class="btn btn-sm btn-light d-lg-none" id="closeSidebarBtn">✕</button>
             </div>
-        </nav>
-    </header>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Barre latérale -->
-            <div class="col-md-2 bg-primary vh-100 p-3">
-                <h4 class="mb-4">Menu</h4>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/">🏠 Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/Simulation/ChoisirProduit">📊 Simulation</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/Simulation/Historique">📂 Historique</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/Simulation/Analyse">📈 Analyse Produits</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-9 p-4">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - OutilRentabilite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <nav class="mt-4">
+                <a class="nav-link d-block px-3 py-2" href="~/Home/Index">Accueil</a>
+                <a class="nav-link d-block px-3 py-2" href="~/Simulation/Historique">Historique</a>
+                <a class="nav-link d-block px-3 py-2" href="~/Simulation/Analyse">Analyses</a>
+                <a class="nav-link d-block px-3 py-2" href="#">Paramètres</a>
+            </nav>
+
+            <div class="mt-auto small">© @DateTime.Now.Year • CEM</div>
+        </aside>
+
+        <div class="overlay" id="overlay"></div>
+
+        <!-- Main -->
+        <div class="main-area">
+            <header class="topbar shadow-sm">
+                <div class="d-flex align-items-center w-100">
+                    <button class="btn btn-ghost d-lg-none me-2" id="openSidebarBtn">☰</button>
+                    <div class="logo">
+                        <img src="~/images/CEM.png" alt="Logo" style="height:32px;" />
+                    </div>
+                    <div class="ms-auto"></div>
+                </div>
+            </header>
+
+            <main class="content">
+                @RenderBody()
+            </main>
         </div>
-    </footer>
+    </div>
+      
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
