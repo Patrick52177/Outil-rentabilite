@@ -82,6 +82,7 @@ button.accept-policy {
             padding: 0 1rem;
             background: #ffffff;
         }
+        
 
         /* Content */
         .content { padding: 1.25rem; overflow: auto; height: calc(100vh - 56px); }
@@ -92,3 +93,24 @@ button.accept-policy {
             .app-root.sidebar-open .overlay { display: block; }
             .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 1020; }
         }
+
+ /* Floating Action Button (style Gmail) */
+.fab-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;   /* en bas à droite */
+    z-index: 1050;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out;
+}
+
+.fab-button:hover {
+    transform: scale(1.1);
+}

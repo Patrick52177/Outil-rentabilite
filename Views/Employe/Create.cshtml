@@ -1,0 +1,75 @@
+@model OutilRentabilite.Models.Employe
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h2>Nouvel employé</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="Nom" class="form-label"></label>
+        <input asp-for="Nom" class="form-control" />
+        <span asp-validation-for="Nom" class="text-danger"></span>
+    </div>
+
+    <h4>Indemnités</h4>
+    <div class="row">
+        <div class="col-md-4">
+            <label asp-for="IndemniteBase"></label>
+            <input asp-for="IndemniteBase" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="ComplementSalaire"></label>
+            <input asp-for="ComplementSalaire" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="Assiduite"></label>
+            <input asp-for="Assiduite" class="form-control" />
+        </div>
+        <!-- ... tu continues avec les autres indemnités -->
+    </div>
+
+    <h4>Charges patronales</h4>
+    <div class="row">
+        <div class="col-md-4">
+            <label asp-for="FraisMedicaux"></label>
+            <input asp-for="FraisMedicaux" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="CSR"></label>
+            <input asp-for="CSR" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="OSIE"></label>
+            <input asp-for="OSIE" class="form-control" />
+        </div>
+        <!-- etc. -->
+    </div>
+
+    <h4>Œuvres sociales</h4>
+    <div class="row">
+        <div class="col-md-4">
+            <label asp-for="TicketsPPN"></label>
+            <input asp-for="TicketsPPN" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="AideScolaire"></label>
+            <input asp-for="AideScolaire" class="form-control" />
+        </div>
+        <div class="col-md-4">
+            <label asp-for="VoitureAmortissement"></label>
+            <input asp-for="VoitureAmortissement" class="form-control" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MinutesDisponiblesParAn"></label>
+        <input asp-for="MinutesDisponiblesParAn" class="form-control" />
+        <span asp-validation-for="MinutesDisponiblesParAn" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Enregistrer</button>
+    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

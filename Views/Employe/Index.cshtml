@@ -1,0 +1,33 @@
+@model IEnumerable<OutilRentabilite.Models.Employe>
+
+<h2>Liste des employés</h2>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Nom</th>
+            <th>Coût annuel total</th>
+            <th>Coût par minute</th>
+            <th>Minutes dispo/an</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+            <tr>
+                <td>@e.Nom</td>
+                <td>@e.CoutAnnuelTotal.ToString("N0") Ar</td>
+                <td>@e.CoutParMinute.ToString("N4") Ar</td>
+                <td>@e.MinutesDisponiblesParAn</td>
+                <td>
+                    <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@e.Id">Voir</a>
+                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@e.Id">Modifier</a>
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@e.Id">Supprimer</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-success" asp-action="Create">+ Nouvel employé</a>

@@ -17,10 +17,132 @@ namespace OutilRentabilite.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("OutilRentabilite.Models.Employe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("AideScolaire")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Assiduite")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("CNaPS")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("CSR")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Caisse")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("ComplementSalaire")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Entretien")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Fonction")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("FraisMedicaux")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<int>("HeuresDisponiblesParAn")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<decimal>("IndemniteBase")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Logement")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
+
+                    b.Property<decimal>("OSIE")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Representation")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Responsabilite")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Restauration")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Technicite")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("TicketsPPN")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Transport")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("VoitureAmortissement")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("WU")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Employes");
+                });
+
+            modelBuilder.Entity("OutilRentabilite.Models.EmployeProduit", b =>
+                {
+                    b.Property<int>("EmployeId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("ProduitFinancierId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime?>("DateAffectation")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int>("MinutesConsacrees")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("EmployeId", "ProduitFinancierId");
+
+                    b.HasIndex("ProduitFinancierId");
+
+                    b.ToTable("EmployeProduits");
+                });
 
             modelBuilder.Entity("OutilRentabilite.Models.ParametresSimulation", b =>
                 {
@@ -31,13 +153,16 @@ namespace OutilRentabilite.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("CoutFinancement")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<decimal>("CoutOperationnel")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<decimal>("CoutRisque")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<DateTime>("DateSimulation")
                         .HasColumnType("TIMESTAMP(7)");
@@ -46,16 +171,20 @@ namespace OutilRentabilite.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<decimal>("FondsPropres")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<decimal>("FraisDossier")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<decimal>("FraisGestion")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<decimal>("Montant")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<int>("NombreOffre")
                         .HasColumnType("NUMBER(10)");
@@ -67,7 +196,8 @@ namespace OutilRentabilite.Migrations
                         .HasColumnType("BINARY_FLOAT");
 
                     b.Property<decimal>("TotalActif")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.HasKey("Id");
 
@@ -106,10 +236,12 @@ namespace OutilRentabilite.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("BeneficeNet")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<decimal>("CoutTotal")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<float>("MargeBrute")
                         .HasColumnType("BINARY_FLOAT");
@@ -121,7 +253,8 @@ namespace OutilRentabilite.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<decimal>("PaybackPeriod")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<float>("ROA")
                         .HasColumnType("BINARY_FLOAT");
@@ -133,7 +266,8 @@ namespace OutilRentabilite.Migrations
                         .HasColumnType("BINARY_FLOAT");
 
                     b.Property<decimal>("RevenuTotal")
-                        .HasColumnType("DECIMAL(18, 2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
 
                     b.HasKey("Id");
 
@@ -141,6 +275,25 @@ namespace OutilRentabilite.Migrations
                         .IsUnique();
 
                     b.ToTable("ResultatsSimulations");
+                });
+
+            modelBuilder.Entity("OutilRentabilite.Models.EmployeProduit", b =>
+                {
+                    b.HasOne("OutilRentabilite.Models.Employe", "Employe")
+                        .WithMany("EmployeProduits")
+                        .HasForeignKey("EmployeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OutilRentabilite.Models.ProduitFinancier", "ProduitFinancier")
+                        .WithMany("EmployeProduits")
+                        .HasForeignKey("ProduitFinancierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employe");
+
+                    b.Navigation("ProduitFinancier");
                 });
 
             modelBuilder.Entity("OutilRentabilite.Models.ParametresSimulation", b =>
@@ -165,6 +318,11 @@ namespace OutilRentabilite.Migrations
                     b.Navigation("parametresSimulation");
                 });
 
+            modelBuilder.Entity("OutilRentabilite.Models.Employe", b =>
+                {
+                    b.Navigation("EmployeProduits");
+                });
+
             modelBuilder.Entity("OutilRentabilite.Models.ParametresSimulation", b =>
                 {
                     b.Navigation("Resultat");
@@ -172,6 +330,8 @@ namespace OutilRentabilite.Migrations
 
             modelBuilder.Entity("OutilRentabilite.Models.ProduitFinancier", b =>
                 {
+                    b.Navigation("EmployeProduits");
+
                     b.Navigation("Simulations");
                 });
 #pragma warning restore 612, 618

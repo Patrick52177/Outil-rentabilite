@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OutilRentabilite</title>
     <script type="importmap"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OutilRentabilite.styles.css" asp-append-version="true" />
@@ -52,7 +53,39 @@
                 @RenderBody()
             </main>
         </div>
+        
     </div>
+ 
+<!-- Floating Action Button -->
+<a href="~/Produit/Create" 
+   class="btn btn-danger fab-button">
+    <i class="bi bi-plus-lg"></i>
+</a>
+
+
+
+<style>/* Floating Action Button (style Gmail) */
+.fab-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;   /* en bas à droite */
+    z-index: 1050;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out;
+}
+
+.fab-button:hover {
+    transform: scale(1.1);
+}
+</style>
+
       
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

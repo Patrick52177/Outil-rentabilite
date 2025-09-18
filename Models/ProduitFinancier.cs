@@ -13,4 +13,6 @@ public class ProduitFinancier
     public string? TypeProduit { get; set; } // "Crédit", "Épargne", "Service"
 
     public ICollection<ParametresSimulation>? Simulations { get; set; }
+
+    public ICollection<EmployeProduit>? EmployeProduits { get; set; }
 }
