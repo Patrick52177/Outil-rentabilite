@@ -14,6 +14,16 @@ builder.Services.AddScoped<SimulationService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+//Ajouter les services API
+app.MapControllers();
+
+//Fichier statiques React
+app.UseDefaultFiles();
+app.UseStaticFiles();
+//Redirection vers React Pour ce qui n'est pas API
+app.MapFallbackToFile("index.html");
+//initialiser les donnée dans le base de donnée
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

@@ -22,6 +22,44 @@ namespace OutilRentabilite.Migrations
 
             OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("OutilRentabilite.Models.ActionProduit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EmployeId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("MinutesParAction")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("NomAction")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<decimal>("NombreActions")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<int>("ProduitFinancierId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("TypeActionId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeId");
+
+                    b.HasIndex("ProduitFinancierId");
+
+                    b.ToTable("ActionsProduits");
+                });
+
             modelBuilder.Entity("OutilRentabilite.Models.Employe", b =>
                 {
                     b.Property<int>("Id")
@@ -38,6 +76,14 @@ namespace OutilRentabilite.Migrations
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
 
+                    b.Property<decimal>("Assurance")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Autre")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
                     b.Property<decimal>("CNaPS")
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
@@ -47,6 +93,10 @@ namespace OutilRentabilite.Migrations
                         .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<decimal>("Caisse")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Carburant")
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
 
@@ -63,6 +113,10 @@ namespace OutilRentabilite.Migrations
                         .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<decimal>("FraisMedicaux")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Gratification")
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
 
@@ -102,6 +156,10 @@ namespace OutilRentabilite.Migrations
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
 
+                    b.Property<decimal>("Telephone")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
                     b.Property<decimal>("TicketsPPN")
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
@@ -121,27 +179,6 @@ namespace OutilRentabilite.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Employes");
-                });
-
-            modelBuilder.Entity("OutilRentabilite.Models.EmployeProduit", b =>
-                {
-                    b.Property<int>("EmployeId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<int>("ProduitFinancierId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<DateTime?>("DateAffectation")
-                        .HasColumnType("TIMESTAMP(7)");
-
-                    b.Property<int>("MinutesConsacrees")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.HasKey("EmployeId", "ProduitFinancierId");
-
-                    b.HasIndex("ProduitFinancierId");
-
-                    b.ToTable("EmployeProduits");
                 });
 
             modelBuilder.Entity("OutilRentabilite.Models.ParametresSimulation", b =>
@@ -277,16 +314,39 @@ namespace OutilRentabilite.Migrations
                     b.ToTable("ResultatsSimulations");
                 });
 
-            modelBuilder.Entity("OutilRentabilite.Models.EmployeProduit", b =>
+            modelBuilder.Entity("OutilRentabilite.Models.TypeAction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TypeActions");
+                });
+
+            modelBuilder.Entity("OutilRentabilite.Models.ActionProduit", b =>
                 {
                     b.HasOne("OutilRentabilite.Models.Employe", "Employe")
-                        .WithMany("EmployeProduits")
+                        .WithMany()
                         .HasForeignKey("EmployeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("OutilRentabilite.Models.ProduitFinancier", "ProduitFinancier")
-                        .WithMany("EmployeProduits")
+                        .WithMany("Actions")
+                        .HasForeignKey("ProduitFinancierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OutilRentabilite.Models.TypeAction", "TypeAction")
+                        .WithMany()
                         .HasForeignKey("ProduitFinancierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -294,6 +354,8 @@ namespace OutilRentabilite.Migrations
                     b.Navigation("Employe");
 
                     b.Navigation("ProduitFinancier");
+
+                    b.Navigation("TypeAction");
                 });
 
             modelBuilder.Entity("OutilRentabilite.Models.ParametresSimulation", b =>
@@ -318,11 +380,6 @@ namespace OutilRentabilite.Migrations
                     b.Navigation("parametresSimulation");
                 });
 
-            modelBuilder.Entity("OutilRentabilite.Models.Employe", b =>
-                {
-                    b.Navigation("EmployeProduits");
-                });
-
             modelBuilder.Entity("OutilRentabilite.Models.ParametresSimulation", b =>
                 {
                     b.Navigation("Resultat");
@@ -330,7 +387,7 @@ namespace OutilRentabilite.Migrations
 
             modelBuilder.Entity("OutilRentabilite.Models.ProduitFinancier", b =>
                 {
-                    b.Navigation("EmployeProduits");
+                    b.Navigation("Actions");
 
                     b.Navigation("Simulations");
                 });

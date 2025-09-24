@@ -13,11 +13,29 @@ namespace OutilRentabilite.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult EditAll()
         {
             var employes = _context.Employes.ToList();
             return View(employes);
         }
+        [HttpPost]
+        public IActionResult EditAll(List<Employe> employes)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (var emp in employes)
+                {
+                    _context.Update(emp);
+                }
+                _context.SaveChanges();
+                TempData["Message"] = "Paramètre employés mis à jour avec succés";
+                return RedirectToAction("EditAll");
+            }
+            return View(employes);
+        }
+           
+        
 
         public IActionResult Details(int id)
         {

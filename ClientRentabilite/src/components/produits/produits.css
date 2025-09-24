@@ -1,0 +1,26 @@
+.fab-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #e30613; /* rouge CEM */
+  color: white;
+  font-weight: bold;
+  padding: 12px 20px;
+  border-radius: 30px;
+  text-decoration: none;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fab-btn:hover {
+  background: #b0050f; /* rouge plus foncé au hover */
+  transform: scale(1.05);
+}
+
+.plus-icon {
+  font-size: 20px;
+  line-height: 1;
+}

@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using OutilRentabilite.Models;
+
 
 namespace OutilRentabilite.Models;
 public class Employe
@@ -34,13 +34,15 @@ public class Employe
     public decimal TicketsPPN { get; set; }
     public decimal AideScolaire { get; set; }
     public decimal VoitureAmortissement { get; set; }
+    public decimal Carburant{ get; set; }
+    public decimal Assurance{ get; set; }
+    public decimal Telephone{ get; set; }
+    public decimal Autre{ get; set; }
+    public decimal Gratification{ get; set; }
 
     // === Autres infos ===
     public int HeuresDisponiblesParAn { get; set; } = (int)60m;
     public int MinutesDisponiblesParAn => HeuresDisponiblesParAn * 60;
-
-    // Navigation
-    public ICollection<EmployeProduit>? EmployeProduits { get; set; }
 
     // Calcul total
     public decimal CoutAnnuelTotal =>
