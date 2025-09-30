@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace OutilRentabilite.Models;
@@ -42,9 +43,12 @@ public class Employe
 
     // === Autres infos ===
     public int HeuresDisponiblesParAn { get; set; } = (int)60m;
+
+    [NotMapped]
     public int MinutesDisponiblesParAn => HeuresDisponiblesParAn * 60;
 
     // Calcul total
+    [NotMapped]
     public decimal CoutAnnuelTotal =>
         IndemniteBase + ComplementSalaire + Assiduite + Responsabilite +
         Fonction + Restauration + Entretien + WU + Logement + Technicite +
@@ -52,6 +56,7 @@ public class Employe
         FraisMedicaux + CSR + OSIE + CNaPS +
         TicketsPPN + AideScolaire + VoitureAmortissement;
 
+    [NotMapped]
     public decimal CoutParMinute =>
         MinutesDisponiblesParAn == 0 ? 0 : Math.Round(CoutAnnuelTotal / MinutesDisponiblesParAn, 4);
 }
