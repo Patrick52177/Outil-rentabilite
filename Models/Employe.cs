@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace OutilRentabilite.Models;
+
 public class Employe
 {
     public int Id { get; set; }
@@ -32,14 +33,16 @@ public class Employe
     public decimal CNaPS { get; set; }
 
     // === Œuvres sociales ===
+    public decimal SocialEntretien { get; set; }
     public decimal TicketsPPN { get; set; }
     public decimal AideScolaire { get; set; }
     public decimal VoitureAmortissement { get; set; }
-    public decimal Carburant{ get; set; }
-    public decimal Assurance{ get; set; }
-    public decimal Telephone{ get; set; }
-    public decimal Autre{ get; set; }
-    public decimal Gratification{ get; set; }
+    public decimal Carburant { get; set; }
+    public decimal Assurance { get; set; }
+    // autre info
+    public decimal Telephone { get; set; }
+    public decimal Autre { get; set; }
+    public decimal Gratification { get; set; }
 
     // === Autres infos ===
     public int HeuresDisponiblesParAn { get; set; } = (int)60m;
@@ -50,13 +53,18 @@ public class Employe
     // Calcul total
     [NotMapped]
     public decimal CoutAnnuelTotal =>
-        IndemniteBase + ComplementSalaire + Assiduite + Responsabilite +
+    IndemniteBase + ComplementSalaire + Assiduite + Responsabilite +
         Fonction + Restauration + Entretien + WU + Logement + Technicite +
         Transport + Caisse + Representation +
         FraisMedicaux + CSR + OSIE + CNaPS +
-        TicketsPPN + AideScolaire + VoitureAmortissement;
+        TicketsPPN + AideScolaire + VoitureAmortissement + SocialEntretien +
+        Carburant + Assurance + Telephone + Autre + Gratification;
 
     [NotMapped]
     public decimal CoutParMinute =>
         MinutesDisponiblesParAn == 0 ? 0 : Math.Round(CoutAnnuelTotal / MinutesDisponiblesParAn, 4);
+
+    public decimal CoutParHeure =>
+       HeuresDisponiblesParAn == 0 ? 0 : Math.Round(CoutAnnuelTotal / HeuresDisponiblesParAn, 4);
+
 }

@@ -152,6 +152,10 @@ namespace OutilRentabilite.Migrations
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
 
+                    b.Property<decimal>("SocialEntretien")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
                     b.Property<decimal>("Technicite")
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");

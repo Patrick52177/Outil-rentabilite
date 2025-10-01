@@ -9,7 +9,7 @@ export default function Actions() {
         {/* Bouton vers la modification des coûts employés */}
         <Link to="/employes" className="btn btn-outline-secondary">
           <i className="bi bi-person-gear me-2"></i>
-          Modifier coûts employés
+          Modifier coûts personnels
         </Link>
       </div>
 
