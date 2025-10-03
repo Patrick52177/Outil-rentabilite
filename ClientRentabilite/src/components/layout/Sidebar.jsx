@@ -18,7 +18,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <nav>
         <Link to="/" className="nav-link" onClick={onClose}>Accueil</Link>
         <Link to="/produits" className="nav-link" onClick={onClose}>Produits</Link>
-        <Link to="/actions" className="nav-link" onClick={onClose}>Coût unitaire</Link>
+        <Link to="/coût-unitaire" className="nav-link" onClick={onClose}>Coût unitaire</Link>
         <Link to="/marge" className="nav-link" onClick={onClose}>Marge</Link>
         <Link to="/simulation" className="nav-link" onClick={onClose}>Simulation</Link>
       </nav>

@@ -20,24 +20,17 @@ export const getProduits = async () => {
   }
 };
 
-// Récupérer un produit par id
-export const getProduitById = async (id) => {
-  try {
-    const response = await axiosInstance.get(`/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Erreur lors de la récupération du produit ${id}:`, error);
-    throw error;
-  }
-};
 
 // Créer un produit
 export const createProduit = async (produit) => {
   try {
-    const response = await axiosInstance.post("", produit);
+    const response = await axiosInstance.post("", {
+      nom: produit.nom,
+      typeProduit: produit.typeProduit
+    });
     return response.data;
   } catch (error) {
-    console.error("Erreur lors de la création du produit:", error);
+    console.error("Erreur lors de la création du produit:", error.response?.data || error.message);
     throw error;
   }
 };
@@ -60,5 +53,28 @@ export const deleteProduit = async (id) => {
   } catch (error) {
     console.error(`Erreur lors de la suppression du produit ${id}:`, error);
     throw error;
+  }
+};
+// Récupérer un produit par id
+export const getProduitById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/${id}/actions`);
+    return response.data;
+  } catch (error) {
+    console.error(`Erreur lors de la récupération du produit ${id}:`, error);
+    throw error;
+  }
+};
+
+
+  //calcul coût partiel 
+  export const getCoutUnitairePartiel = async (id) => {
+    try{
+     const response = await axiosInstance.get(`${id}/cout-partiel`);
+     return response.data;
+    } catch (error) {
+    console.error(`Erreur lors de la calcule coût unitaire du produit ${id}:`, error);
+    throw error;
+    
   }
 };

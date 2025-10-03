@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<ResultatSimulation>? ResultatsSimulations { get; set; }
     public DbSet<ActionProduit> ActionsProduits { get; set; }
     public DbSet<TypeAction> TypeActions { get; set; }
+    public DbSet<ParametresGenerauxProduit> ParametresGenerauxProduits { get; set; }
   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -35,21 +36,23 @@ public class AppDbContext : DbContext
             .HasOne(a => a.TypeAction)
             .WithMany()
             .HasForeignKey(f => f.ProduitFinancierId);
+            
+            
 
-        // Relation 1:1 entre ParametresSimulation et ResultatSimulation
-        modelBuilder.Entity<ParametresSimulation>()
-            .HasOne(p => p.Resultat)
-            .WithOne(r => r.parametresSimulation)
-            .HasForeignKey<ResultatSimulation>(r => r.ParametresSimulationId)
-            .OnDelete(DeleteBehavior.Cascade);
+       /* // Relation 1:1 entre ParametresSimulation et ResultatSimulation
+          modelBuilder.Entity<ParametresSimulation>()
+              .HasOne(p => p.Resultat)
+              .WithOne(r => r.parametresSimulation)
+              .HasForeignKey<ResultatSimulation>(r => r.ParametresSimulationId)
+              .OnDelete(DeleteBehavior.Cascade);
 
-        // Relation 1:N entre ProduitFinancier et ParametresSimulation
-        modelBuilder.Entity<ProduitFinancier>()
-            .HasMany(p => p.Simulations)
-            .WithOne(s => s.ProduitFinancier)
-            .HasForeignKey(s => s.ProduitFinancierId)
-            .OnDelete(DeleteBehavior.Cascade);
-
+          // Relation 1:N entre ProduitFinancier et ParametresSimulation
+          modelBuilder.Entity<ProduitFinancier>()
+              .HasMany(p => p.Simulations)
+              .WithOne(s => s.ProduitFinancier)
+              .HasForeignKey(s => s.ProduitFinancierId)
+              .OnDelete(DeleteBehavior.Cascade);
+  */
 
         // Decimal precision global (ensure NUMBER(18,4))
         foreach (var property in modelBuilder.Model.GetEntityTypes()

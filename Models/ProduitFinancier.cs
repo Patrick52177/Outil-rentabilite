@@ -12,8 +12,10 @@ public class ProduitFinancier
     [Required]
     public string? TypeProduit { get; set; } // "Crédit", "Épargne", "Service"
 
+    public ParametresGenerauxProduit? ParametresGenerauxProduit{ get; set; }
+
     public ICollection<ParametresSimulation>? Simulations { get; set; }
-    
-    public ICollection<ActionProduit>? Actions { get; set; }
+
+    public ICollection<ActionProduit>? Actions { get; set; } = new List<ActionProduit>();
     
 }

@@ -3,7 +3,8 @@ import Layout from "./components/layout/Layout";
 import Sidebar from "./components/layout/Sidebar";
 import ProduitsPage from "./components/produits/ProduitsPage";
 import CreateProduit from "./components/produits/CreateProduit";
-import Actions from "./components/actions/Actions";
+import ChoisirProduit from "./components/actions/ChoisirProduit"
+import CoutUnitaire from "./components/actions/CoutUnitaire"
 import Employes from "./components/employes/Employes";
 
 
@@ -20,7 +21,8 @@ function App() {
       <Routes>
             <Route path="/" element={<h2>Accueil</h2>} />
             <Route path="/produits" element={<ProduitsPage />} />
-            <Route path="/actions" element={<Actions/>} />
+            <Route path="/coût-unitaire" element={<ChoisirProduit/>} />
+            <Route path="/coût-unitaire/:id" element={<CoutUnitaire/>} />
             <Route path="/employes" element={<Employes/>} />
             <Route path="/produits/nouveau" element={<CreateProduit />} />
           </Routes>

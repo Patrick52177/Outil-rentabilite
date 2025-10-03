@@ -18,10 +18,7 @@ public class ActionProduit
 
     public int TypeActionId { get; set; }
     public TypeAction TypeAction { get; set; }
-
-    [Required, StringLength(100)]
-    public string NomAction { get; set; } = "";
-
+    
     // Ex: nombre d’actions par an
     public decimal NombreActions { get; set; }
 
@@ -34,4 +31,6 @@ public class ActionProduit
 
     [NotMapped]
     public decimal CoutAction => Employe != null ? TotalMinutes * Employe.CoutParMinute : 0;
+
+
 }
