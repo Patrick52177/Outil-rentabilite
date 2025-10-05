@@ -15,7 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<Employe>? Employes { get; set; }
     public DbSet<ResultatSimulation>? ResultatsSimulations { get; set; }
     public DbSet<ActionProduit> ActionsProduits { get; set; }
-    public DbSet<TypeAction> TypeActions { get; set; }
+  //  public DbSet<TypeAction> TypeActions { get; set; }
     public DbSet<ParametresGenerauxProduit> ParametresGenerauxProduits { get; set; }
   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,10 +32,7 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(a => a.EmployeId);
 
-        modelBuilder.Entity<ActionProduit>()
-            .HasOne(a => a.TypeAction)
-            .WithMany()
-            .HasForeignKey(f => f.ProduitFinancierId);
+      
             
             
 

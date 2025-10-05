@@ -36,14 +36,16 @@ namespace OutilRentabilite.Migrations
                     b.Property<int>("MinutesParAction")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
+
                     b.Property<decimal>("NombreActions")
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
 
                     b.Property<int>("ProduitFinancierId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<int>("TypeActionId")
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
@@ -348,23 +350,6 @@ namespace OutilRentabilite.Migrations
                     b.ToTable("ResultatsSimulations");
                 });
 
-            modelBuilder.Entity("OutilRentabilite.Models.TypeAction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TypeActions");
-                });
-
             modelBuilder.Entity("OutilRentabilite.Models.ActionProduit", b =>
                 {
                     b.HasOne("OutilRentabilite.Models.Employe", "Employe")
@@ -379,17 +364,9 @@ namespace OutilRentabilite.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OutilRentabilite.Models.TypeAction", "TypeAction")
-                        .WithMany()
-                        .HasForeignKey("ProduitFinancierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Employe");
 
                     b.Navigation("ProduitFinancier");
-
-                    b.Navigation("TypeAction");
                 });
 
             modelBuilder.Entity("OutilRentabilite.Models.ParametresGenerauxProduit", b =>
@@ -434,8 +411,7 @@ namespace OutilRentabilite.Migrations
                 {
                     b.Navigation("Actions");
 
-                    b.Navigation("ParametresGenerauxProduit")
-                        .IsRequired();
+                    b.Navigation("ParametresGenerauxProduit");
 
                     b.Navigation("Simulations");
                 });

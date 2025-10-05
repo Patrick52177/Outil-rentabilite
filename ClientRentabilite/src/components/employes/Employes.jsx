@@ -1,7 +1,7 @@
 import Layout from "../layout/Layout";
 import { useEffect, useState } from "react";
 import { getEmployes, updateEmploye } from "../../services/employeService";
-
+import { navigate, useNavigate } from "react-router-dom";
 //fonction transformer une clé en label lisible 
 const formatKey = (key) => {
   const formattedKey = key.replace(/([A-Z])/g, "$1");
@@ -12,6 +12,7 @@ const formatKey = (key) => {
 }
 
 export default function Employes() {
+    const navigate = useNavigate();
   const [employes, setEmployes] = useState([]);
   const [selectedEmploye, setSelectedEmploye] = useState(null);
   useEffect(()=> {
@@ -28,9 +29,20 @@ export default function Employes() {
     console.log("selectedEmploye mise à jour :", selectedEmploye);
   }, [selectedEmploye]);
 
+
+  
   return (
     <>
-      <h2>Coût personnel</h2>
+       <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2>Coût personnels</h2>
+        <button 
+          type="button" 
+          className="btn btn-outline-secondary"
+         onClick={()=>navigate(`/coût-unitaire`)}
+        >
+          ← Retour à la liste
+        </button>
+      </div>
       <table className="table table-striped">
         <thead className="table-dark">
           <tr>

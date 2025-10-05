@@ -38,7 +38,7 @@ export const createProduit = async (produit) => {
 // Modifier un produit
 export const updateProduit = async (id, produit) => {
   try {
-    const response = await axiosInstance.put(`/${id}`, produit);
+    const response = await axiosInstance.put(`${id}`, produit);
     return response.data;
   } catch (error) {
     console.error(`Erreur lors de la modification du produit ${id}:`, error);
@@ -47,34 +47,67 @@ export const updateProduit = async (id, produit) => {
 };
 
 // Supprimer un produit
-export const deleteProduit = async (id) => {
+
+//Initialiser les actions par défaut pour un produit
+export const initActions = async (produitId) => {
   try {
-    await axiosInstance.delete(`/${id}`);
+    const response = await axiosInstance.post(`/${produitId}/actions/init`);
+    return response.data;
   } catch (error) {
-    console.error(`Erreur lors de la suppression du produit ${id}:`, error);
+    console.error("Erreur lors de l'initialisation des actions:", error);
     throw error;
   }
 };
 // Récupérer un produit par id
 export const getProduitById = async (id) => {
   try {
-    const response = await axiosInstance.get(`/${id}/actions`);
+    const response = await axiosInstance.get(`/${id}/details`);
     return response.data;
   } catch (error) {
     console.error(`Erreur lors de la récupération du produit ${id}:`, error);
     throw error;
   }
 };
+//Mettre à jour une action
+export const updateActionProduit = async (actionId, action) => {
+  try{
+    const response = await axiosInstance.put(`/actions/${actionId}`, action)
+     return response.data;
+  }catch (error) {
+    console.error(`Erreur lors de la mise à jour de l'action:`, error);
+    throw error;
+  }
+};
 
+//Mettre à jour les paramètres généraux (charges directes)
+export const updateParametresGeneraux = async (produitId, parametres) => {
+  try {
+    const response = await axiosInstance.put(`${produitId}/parametres`, parametres);
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour des paramètres généraux :", error);
+    throw error;
+  }
+};
 
   //calcul coût partiel 
-  export const getCoutUnitairePartiel = async (id) => {
+  export const getCoutUnitairePartiel = async (Id) => {
     try{
-     const response = await axiosInstance.get(`${id}/cout-partiel`);
+     const response = await axiosInstance.get(`${Id}/cout-partiel`);
      return response.data;
     } catch (error) {
-    console.error(`Erreur lors de la calcule coût unitaire du produit ${id}:`, error);
+    console.error(`Erreur lors de la calcule coût unitaire du produit :`, error);
     throw error;
     
+  }
+};
+
+export const deleteProduit = async (id) => {
+  try {
+   const response = await axiosInstance.delete(`${id}`);
+   return response.data;
+  } catch (error) {
+    console.error(`Erreur lors de la suppression du produit ${id}:`, error);
+    throw error;
   }
 };

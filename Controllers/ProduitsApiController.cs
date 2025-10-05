@@ -16,95 +16,43 @@ namespace OutilRentabilite.Controllers
             _context = context;
         }
 
-        // GET: api/ProduitsApi
+        // 🔹 GET: api/ProduitsApi
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProduitFinancier>>> GetProduits()
         {
-            return await _context.ProduitsFinanciers.ToListAsync();
+            return await _context.ProduitsFinanciers
+                .AsNoTracking()
+                .ToListAsync();
         }
-
-        // GET: api/ProduitsApi/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ProduitFinancier>> GetProduitById(int id)
-        {
-            var produit = await _context.ProduitsFinanciers.FindAsync(id);
-            if (produit == null) return NotFound();
-            return produit;
-        }
-
-        // POST: api/ProduitsApi
+        // 🔹 POST: api/ProduitsApi
         [HttpPost]
         public async Task<ActionResult<ProduitFinancier>> CreateProduit([FromBody] ProduitFinancier produit)
         {
-          //  if (!ModelState.IsValid) return BadRequest(ModelState);
-            //Ajout du produit
             try
             {
                 _context.ProduitsFinanciers.Add(produit);
                 await _context.SaveChangesAsync();
 
-
-                //Récuperer les types d'actions fixes 
-                var typeActions = await _context.TypeActions.ToListAsync();
-                var employes = await _context.Employes.ToListAsync();
-                //Créer automatiquement les actions liées au produit
-                foreach (var typeAction in typeActions)
-                {
-
-
-                    var actionProduit = new ActionProduit
-                    {
-                        ProduitFinancierId = produit.Id,
-                        TypeActionId = typeAction.Id,
-                        EmployeId = (int)(employes.FirstOrDefault()?.Id),
-                        MinutesParAction = 0,
-                        NombreActions = 0
-                    };
-
-                    _context.ActionsProduits.Add(actionProduit);
-                }
-                //ajouter paramètre base 
-                var paramGen = new ParametresGenerauxProduit
-                {
-                    ProduitFinancierId = produit.Id,
-                    LivretPa = 0,
-                    Bordereau = 0,
-                    Communication = 0,
-                    Informatique = 0
-                };
-                _context.ParametresGenerauxProduits.Add(paramGen);
-                await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetProduitById), new { id = produit.Id }, produit);
+                return CreatedAtAction(nameof(GetProduitDetails), new { id = produit.Id }, produit);
             }
             catch (Exception ex)
             {
-                return StatusCode(500,$"Erreur interne :{ex.Message}");
+                return StatusCode(500, $"Erreur interne : {ex.Message}");
             }
         }
 
-        // PUT: api/ProduitsApi/5
+        // 🔹 PUT: api/ProduitsApi/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduit(int id, ProduitFinancier produit)
+        public async Task<IActionResult> UpdateProduit(int id, [FromBody] ProduitFinancier produit)
         {
-            if (id != produit.Id) return BadRequest();
+            if (id != produit.Id)
+                return BadRequest();
 
             _context.Entry(produit).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.ProduitsFinanciers.Any(p => p.Id == id))
-                    return NotFound();
-                else
-                    throw;
-            }
-
+            await _context.SaveChangesAsync();
             return NoContent();
         }
-
-        // DELETE: api/ProduitsApi/5
+        //Delete : produit
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduit(int id)
         {
@@ -113,42 +61,125 @@ namespace OutilRentabilite.Controllers
 
             _context.ProduitsFinanciers.Remove(produit);
             await _context.SaveChangesAsync();
-
             return NoContent();
+
+
+
         }
 
-        //GET api/ProduitsApi/5
-        [HttpGet("{id}/actions")]
-        public async Task<IActionResult> GetActionProduit(int id)
+        // 🔹 Initialiser les actions par défaut
+        [HttpPost("{id}/actions/init")]
+        public async Task<IActionResult> InitActions(int id)
         {
-            var produit = await _context.ProduitsFinanciers.Include(p => p.Actions)
-            .ThenInclude(a => a.TypeAction).Include(p => p.Actions)
-            .ThenInclude(p => p.Employe).Include(p =>p.ParametresGenerauxProduit).AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            var produit = await _context.ProduitsFinanciers.Include(p => p.Actions).FirstOrDefaultAsync(p => p.Id == id);
+            if (produit == null) return NotFound("Produit non trouvé");
 
-            if (produit == null) return NotFound();
+            if (produit.Actions != null && produit.Actions.Any())
+                return Ok("les actions existent déjà initialisée pour ce produit");
+            //Si les actions existent déjà initialisée pour ce produit.
+
+            var employes = await _context.Employes.ToListAsync();
+            if (!employes.Any()) return BadRequest("Aucun employé");
+
+            var actionBase = new List<string>
+            {
+                "Ouverture",
+                "Clotûre",
+                "Tenue",
+                "Transaction en espèce"
+            };
+            var nouvellesActions = new List<ActionProduit>();
+
+            foreach (var nomAction in actionBase)
+            {
+                var employe = employes.FirstOrDefault()!;
+
+                nouvellesActions.Add(new ActionProduit
+                {
+                    Nom = nomAction,
+                    EmployeId = employe.Id,
+                    MinutesParAction = 0,
+                    NombreActions = 0,
+                    ProduitFinancierId = produit.Id
+                });
+            }
+
+            _context.ActionsProduits.AddRange(nouvellesActions);
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Actions initialisé avec succés.",
+                produitId = produit.Id,
+                actionsCreees = nouvellesActions.Select(a => new
+                {
+                    a.Id,
+                    a.Nom,
+                    a.EmployeId
+                })
+            });
+        }
+
+        // 🔹 GET: api/ProduitsApi/{id}/details
+        [HttpGet("{id}/details")]
+        public async Task<IActionResult> GetProduitDetails(int id)
+        {
+            var produit = await _context.ProduitsFinanciers
+                .Include(p => p.Actions)
+                    .ThenInclude(a => a.Employe)
+                .Include(p => p.ParametresGenerauxProduit)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (produit == null)
+                return NotFound();
+
+            var dto = new
+            {
+                produit.Id,
+                produit.Nom,
+                produit.TypeProduit,
+                Actions = produit.Actions.Select(a => new
+                {
+                    a.Id,
+                    a.Nom,
+                    a.MinutesParAction,
+                    a.NombreActions,
+                    Employe = new
+                    {
+                        a.Employe.Id,
+                        a.Employe.Nom,
+                        a.Employe.CoutParMinute
+                    }
+                })
+            };
+
 
             return Ok(produit);
         }
 
-        //Put api/produits/actions/{id}
+
+
+        // 🔹 PUT api/ProduitsApi/actions/{id}
         [HttpPut("actions/{id}")]
         public async Task<IActionResult> UpdateActionProduit(int id, [FromBody] ActionProduit payload)
         {
-            var existing = await _context.ActionsProduits.Include(a => a.Employe)
-            .FirstOrDefaultAsync(a => a.Id == id);
+            var action = await _context.ActionsProduits.FindAsync(id);
+            if (action == null) return NotFound();
 
-            if (existing == null) return NotFound();
-            existing.NombreActions = payload.NombreActions;
-            existing.MinutesParAction = payload.MinutesParAction;
+            action.NombreActions = payload.NombreActions;
+            action.MinutesParAction = payload.MinutesParAction;
+            action.EmployeId = payload.EmployeId;
+
             await _context.SaveChangesAsync();
-            return Ok(existing);
+            return Ok(action);
         }
-           //PUT api/produits/{id}/parametres-generaux
+
+        // 🔹 PUT api/ProduitsApi/{id}/parametres-generaux
         [HttpPut("{id}/parametres-generaux")]
         public async Task<IActionResult> UpdateParametresGeneraux(int id, [FromBody] ParametresGenerauxProduit payload)
         {
             var param = await _context.ParametresGenerauxProduits.FirstOrDefaultAsync(p => p.ProduitFinancierId == id);
-
             if (param == null) return NotFound();
 
             param.Bordereau = payload.Bordereau;
@@ -159,30 +190,51 @@ namespace OutilRentabilite.Controllers
             await _context.SaveChangesAsync();
             return Ok(param);
         }
-        
 
-        //GET api/produits/{id}/cout-partiel
+        // 🔹 GET api/ProduitsApi/{id}/cout-partiel
         [HttpGet("{id}/cout-partiel")]
         public async Task<IActionResult> GetCoutUnitairePartiel(int id)
         {
-            var produit = await _context.ProduitsFinanciers.Include(p => p.Actions)
-            .ThenInclude(a => a.Employe).Include(p => p.ParametresGenerauxProduit).AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            var produit = await _context.ProduitsFinanciers
+                .Include(p => p.Actions)
+                    .ThenInclude(a => a.Employe)
+                .Include(p => p.ParametresGenerauxProduit)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (produit == null) return NotFound();
-            var coutActions = produit.Actions.Sum(a => (a.NombreActions * a.MinutesParAction * (a.Employe?.CoutParMinute)));
 
-            var coutChargesDirectes = (produit.ParametresGenerauxProduit?.Informatique ?? 0) + (produit.ParametresGenerauxProduit?.LivretPa ?? 0)
-            + (produit.ParametresGenerauxProduit?.Bordereau ?? 0) + (produit.ParametresGenerauxProduit?.Communication ?? 0);
+            decimal coutActions = produit.Actions.Sum(a =>
+                (a.NombreActions * a.MinutesParAction * (a.Employe?.CoutParMinute ?? 0m))
+            );
 
-            decimal coutPartiel = (decimal)coutActions + (decimal)coutChargesDirectes;
+            decimal coutCharges = (produit.ParametresGenerauxProduit?.LivretPa ?? 0)
+                + (produit.ParametresGenerauxProduit?.Bordereau ?? 0)
+                + (produit.ParametresGenerauxProduit?.Informatique ?? 0)
+                + (produit.ParametresGenerauxProduit?.Communication ?? 0);
+
             return Ok(new
             {
                 ProduitId = produit.Id,
                 CoutActions = coutActions,
-                FraisGeneraux = coutChargesDirectes,
-                CoutUnitairePartiel = coutPartiel
+                CoutCharges = coutCharges,
+                CoutUnitairePartiel = coutActions + coutCharges
             });
         }
-     
+
+        //Modifier l'employe appartient à une action
+        [HttpPut("actions/{id}/employe")]
+        public async Task<IActionResult> UpdateActinEmploye(int id, [FromBody] dynamic body)
+        {
+            int employeId = (int)body.employeId;
+            var action = await _context.ActionsProduits.FindAsync(id);
+            if (action == null) return NotFound();
+
+            action.EmployeId = employeId;
+            await _context.SaveChangesAsync();
+
+            return Ok(action);
+        } 
+
     }
 }

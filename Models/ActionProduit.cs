@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 
 namespace OutilRentabilite.Models;
@@ -10,14 +11,17 @@ public class ActionProduit
 
     [Required]
     public int ProduitFinancierId { get; set; }
+    [JsonIgnore]
     public ProduitFinancier? ProduitFinancier { get; set; }
 
     [Required]
     public int EmployeId { get; set; }
     public Employe? Employe { get; set; }
 
-    public int TypeActionId { get; set; }
-    public TypeAction TypeAction { get; set; }
+    /*  public int TypeActionId { get; set; }
+      public TypeAction TypeAction { get; set; }*/
+      [Required, StringLength(150)]
+    public string Nom { get; set; } = "";
     
     // Ex: nombre d’actions par an
     public decimal NombreActions { get; set; }
