@@ -63,7 +63,7 @@ public class Employe
     [NotMapped]
     public decimal CoutParMinute =>
         MinutesDisponiblesParAn == 0 ? 0 : Math.Round(CoutAnnuelTotal / MinutesDisponiblesParAn, 4);
-
+    [NotMapped]
     public decimal CoutParHeure =>
        HeuresDisponiblesParAn == 0 ? 0 : Math.Round(CoutAnnuelTotal / HeuresDisponiblesParAn, 4);
 

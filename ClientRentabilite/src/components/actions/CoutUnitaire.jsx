@@ -4,14 +4,17 @@ import { useParams } from "react-router-dom";
 import Layout from "../layout/Layout";
 import {
   getProduitById,
+  updateActionEmploye,
   updateActionProduit,
   updateParametresGeneraux,
   getCoutUnitairePartiel,
 } from "../../services/produitService";
+import { getEmployes } from "../../services/employeService"
 
 export default function CoutUnitaire() {
 
   const { id } = useParams();
+  const [employes, setEmployes] = useState(null);
   const [produit, setProduit] = useState(null);
   const [charges, setCharges] = useState({
     livretPa: 0,
@@ -25,52 +28,57 @@ export default function CoutUnitaire() {
 
   // Charger les données du produit
   useEffect(() => {
-    setError(null);
-    setLoading(true);
-
-    getProduitById(id).then((data)=>{
-      if(!data || !data.id){
-        setError("Produit introuvable");
-        setProduit(null);
-      }else {
-        setProduit(data);
-      }
-    }).catch((err) => {
-      console.error("Erreur lors du chargement :", err);
-      setError("Impossible de charger le produit");
-    }).finally(()=>setLoading(false));
-
-    const chargerProduit = async () => {
-      setLoading(true);
-      try {
-        const data = await getProduitById(id);
-        setProduit(data);
-
-        if (data.parametresGenerauxProduit) {
-          setCharges({
-            livretPa: data.parametresGenerauxProduit.livretPa || 0,
-            bordereau: data.parametresGenerauxProduit.bordereau || 0,
-            informatique: data.parametresGenerauxProduit.informatique || 0,
-            communication: data.parametresGenerauxProduit.communication || 0,
-          });
-        }
-      } catch (error) {
-        console.error("Erreur lors du chargement du produit :", error);
-      } finally {
-        setLoading(false);
+  const fetchData =  async () => {
+      try{
+        const [prod, emps] = await Promise.all([
+          getProduitById(id),
+          getEmployes(),
+        ]);
+        setProduit(prod);
+        setEmployes(emps);
+      }catch(err){
+        console.error("Erreur de chargement :", err)
+      }finally{
+        setLoading(false)
       }
     };
-
-    
-    chargerProduit();
+    fetchData();
   }, [id]);
 
+  //Pour afin de choisir l'employe
+  const handleChangeEmploye = async (actionId, employeId) =>{
+    try{
+      const updated = await updateActionEmploye(actionId, employeId);
+      setProduit((prev)=> ({
+        ...prev, actions: prev.actions.map((a) => a.id === actionId ? { ...a, 
+          employe: updated.employe} : a),
+      }));
+    }catch(err){
+     console.error("erreur lors du changement d'employe :", err) ;
+    }
+  };
+
   // ✅ Modifier un champ d'action
-  const handleChangeAction = (index, field, value) => {
+/*  const handleChangeAction = (index, field, value) => {
     const updatedActions = [...produit.actions];
     updatedActions[index][field] = Number(value);
     setProduit({ ...produit, actions: updatedActions });
-  };
+  };*/
+//Mise à jour des valeurs action
+
+const handleUpdateValeur = async (actionId, field, value) =>{
+  const val = Number(value);
+  if(isNaN(val)) return ;
+setProduit((prev) => ({
+  ...prev, actions: prev.actions.map((a)=> a.id === actionId ? { ...a,[field]: val} : a),
+}));
+   
+try {
+  await updateActionProduit(actionId, { [field]: val });
+} catch (err){
+  console.error("Erreur lors de la mise à jour :", err)
+}
+}
 
   // ✅ Modifier charges directes
   const handleChangeCharge = (e) => {
@@ -95,13 +103,18 @@ export default function CoutUnitaire() {
   };
 
   // ✅ Calcul local du coût unitaire partiel
-  const handleCalculer = async () => {
-    try {
-      const data = await getCoutUnitairePartiel(produit.id);
-      setResultat(data);
-    } catch (error) {
-      console.error("Erreur lors du calcul du coût partiel :", error);
-    }
+  const calculerCoutPartiel = () => {
+    if (!produit) return;
+
+    const coutActions = (produit.actions ?? []).reduce((total, a)=>
+    {
+      const cout = a.minutesParAction * a.nombreActions * (a.employe?.coutParMinute ?? 0);
+      return total + cout;
+    }, 0);
+
+    const coutCharges = charges.bordereau + charges.communication + charges.informatique + charges.livretPa;
+
+    setResultat({ coutActions,coutCharges,coutPartiel : coutActions+coutCharges});
   };
 
   if (loading) return <>Chargement...</>;
@@ -123,10 +136,10 @@ export default function CoutUnitaire() {
         <table className="table table-bordered">
           <thead className="table-dark">
             <tr>
-              <th>Nom de l’action</th>
-              <th>Employé</th>
-              <th>Minutes / action</th>
-              <th>Nombre d’actions</th>
+              <th>Frais Personnels</th>
+              <th>Coût Employé</th>
+              <th>Minutes / transaction</th>
+              <th>Nombre p.a</th>
               <th>Coût (Ar)</th>
             </tr>
           </thead>
@@ -136,14 +149,17 @@ export default function CoutUnitaire() {
             
                 <tr key={a.id}>
                   <td>{a.nom}</td>
-                  <td>{a.employe?.nom ?? "—"}</td>
+                  <td style={{minWidth:"200px"}} ><select className="form-select" value={a.employe?.id || ""} 
+                  onChange={(e)=> handleChangeEmploye(a.id,parseInt(e.target.value))}>
+                    <option value="">--Choisir employé--</option>
+                    {employes.map((emp)=>(<option key={emp.id} value={emp.id}>{emp.nom}</option>))}</select></td>
                   <td>
                     <input
                       type="number"
                       className="form-control"
-                      value={a.minutesParAction}
+                      value={a.minutesParAction || ""}
                       onChange={(e) =>
-                        handleChangeAction(index, "minutesParAction", e.target.value)
+                        handleUpdateValeur(a.id, "minutesParAction", e.target.value)
                       }
                     />
                   </td>
@@ -151,9 +167,9 @@ export default function CoutUnitaire() {
                     <input
                       type="number"
                       className="form-control"
-                      value={a.nombreActions}
+                      value={a.nombreActions || ""}
                       onChange={(e) =>
-                        handleChangeAction(index, "nombreActions", e.target.value)
+                        handleUpdateValeur(a.id, "nombreActions", e.target.value)
                       }
                     />
                   </td>
@@ -188,7 +204,7 @@ export default function CoutUnitaire() {
                 type="number"
                 className="form-control"
                 name={key}
-                value={charges[key]}
+                value={charges[key] || ""}
                 onChange={handleChangeCharge}
               />
             </div>
@@ -200,7 +216,7 @@ export default function CoutUnitaire() {
           <button className="btn btn-success me-2" onClick={handleSaveAll}>
             💾 Sauvegarder
           </button>
-          <button className="btn btn-primary" onClick={handleCalculer}>
+          <button className="btn btn-primary" onClick={calculerCoutPartiel}>
             ⚙️ Calculer coût partiel
           </button>
         </div>
@@ -212,9 +228,9 @@ export default function CoutUnitaire() {
               Résultat du calcul
             </div>
             <div className="card-body">
-              <p>Coût des actions : {resultat.coutActions.toFixed(2)} Ar</p>
-              <p>Charges directes : {resultat.coutCharges.toFixed(2)} Ar</p>
-              <h5>Total (partiel) : {resultat.coutUnitairePartiel.toFixed(2)} Ar</h5>
+              <p>Coût des actions : {resultat.coutActions} Ar</p>
+              <p>Charges directes : {resultat.coutCharges} Ar</p>
+              <h5>Total (partiel) : {resultat.coutPartiel} Ar</h5>
             </div>
           </div>
         )}

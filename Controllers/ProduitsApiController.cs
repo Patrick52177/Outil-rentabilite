@@ -75,49 +75,112 @@ namespace OutilRentabilite.Controllers
             if (produit == null) return NotFound("Produit non trouvé");
 
             if (produit.Actions != null && produit.Actions.Any())
-                return Ok("les actions existent déjà initialisée pour ce produit");
+                return Ok(produit.Actions);
             //Si les actions existent déjà initialisée pour ce produit.
 
             var employes = await _context.Employes.ToListAsync();
-            if (!employes.Any()) return BadRequest("Aucun employé");
-
-            var actionBase = new List<string>
+            int? GetEmployeId(string role)
             {
-                "Ouverture",
-                "Clotûre",
-                "Tenue",
-                "Transaction en espèce"
-            };
-            var nouvellesActions = new List<ActionProduit>();
-
-            foreach (var nomAction in actionBase)
-            {
-                var employe = employes.FirstOrDefault()!;
-
-                nouvellesActions.Add(new ActionProduit
-                {
-                    Nom = nomAction,
-                    EmployeId = employe.Id,
-                    MinutesParAction = 0,
-                    NombreActions = 0,
-                    ProduitFinancierId = produit.Id
-                });
+                return employes.FirstOrDefault(e => e.Nom.Contains(role, StringComparison.OrdinalIgnoreCase))?.Id;
             }
 
-            _context.ActionsProduits.AddRange(nouvellesActions);
-            await _context.SaveChangesAsync();
+            var actions = new List<ActionProduit>();
 
-            return Ok(new
+            if (produit.TypeProduit.Equals("Épargne", StringComparison.OrdinalIgnoreCase))
             {
-                message = "Actions initialisé avec succés.",
-                produitId = produit.Id,
-                actionsCreees = nouvellesActions.Select(a => new
+                actions.Add(new ActionProduit
                 {
-                    a.Id,
-                    a.Nom,
-                    a.EmployeId
-                })
-            });
+                    Nom = "Ouverture",
+                    EmployeId = 3,
+                    NombreActions = 0,
+                    MinutesParAction = 0
+
+                });
+                actions.Add(new ActionProduit
+                {
+                    Nom = "Clotûre",
+                    EmployeId = 3,
+                    NombreActions = 0,
+                    MinutesParAction = 0
+
+                });
+                actions.Add(new ActionProduit
+                {
+                    Nom = "Tenue",
+                    EmployeId = 4,
+                    NombreActions = 0,
+                    MinutesParAction = 0
+
+                });
+                actions.Add(new ActionProduit
+                {
+                    Nom = "Transaction en espèce",
+                    EmployeId = 4,
+                    NombreActions = 0,
+                    MinutesParAction = 0
+
+                });
+                actions.Add(new ActionProduit
+                {
+                    Nom = "Transaction en scripturales",
+                    EmployeId = 4,
+                    NombreActions = 0,
+                    MinutesParAction = 0
+
+                });
+            }
+            else if (produit.TypeProduit.Equals("Crédit", StringComparison.OrdinalIgnoreCase))
+            {
+                actions.Add(new ActionProduit
+                {
+                    Nom = "Ouverture",
+                    EmployeId = 1,
+                    NombreActions = 0,
+                    MinutesParAction = 0
+
+                });
+                actions.Add(new ActionProduit
+                {
+                    Nom = "Clotûre",
+                    EmployeId = 3,
+                    NombreActions = 0,
+                    MinutesParAction = 0
+
+                });
+                actions.Add(new ActionProduit
+                {
+                    Nom = "Tenue",
+                    EmployeId = 4,
+                    NombreActions = 0,
+                    MinutesParAction = 0
+
+                });
+                actions.Add(new ActionProduit
+                {
+                    Nom = "Transaction en espèce",
+                    EmployeId = 4,
+                    NombreActions = 0,
+                    MinutesParAction = 0
+
+                });
+                actions.Add(new ActionProduit
+                {
+                    Nom = "Transaction en scripturales",
+                    EmployeId = 4,
+                    NombreActions = 0,
+                    MinutesParAction = 0
+
+                });
+            }
+            foreach (var a in actions)
+            {
+                a.ProduitFinancierId = produit.Id;
+
+                _context.ActionsProduits.Add(a);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(actions);
         }
 
         // 🔹 GET: api/ProduitsApi/{id}/details
@@ -227,11 +290,12 @@ namespace OutilRentabilite.Controllers
         public async Task<IActionResult> UpdateActinEmploye(int id, [FromBody] dynamic body)
         {
             int employeId = (int)body.employeId;
-            var action = await _context.ActionsProduits.FindAsync(id);
+            var action = await _context.ActionsProduits.Include(a =>a.Employe).FirstOrDefaultAsync(a=>a.Id==id);
             if (action == null) return NotFound();
 
             action.EmployeId = employeId;
             await _context.SaveChangesAsync();
+            action.Employe = await _context.Employes.FindAsync(id);
 
             return Ok(action);
         } 

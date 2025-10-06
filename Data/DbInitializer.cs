@@ -55,7 +55,7 @@ public static class DbInitializer
 
             context.SaveChanges();*/
 
-            var employeDefault = context.Employes.First();
+           /* var employeDefault = context.Employes.First();
             foreach (var produit in context.ProduitsFinanciers)
             {
                 foreach (var action in new[]{
@@ -72,6 +72,6 @@ public static class DbInitializer
                     });
                 }
             }
-            context.SaveChanges();
+            context.SaveChanges();*/
         }
     }

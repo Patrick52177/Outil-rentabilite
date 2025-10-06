@@ -48,6 +48,16 @@ export const updateProduit = async (id, produit) => {
 
 // Supprimer un produit
 
+export const deleteProduit = async (id) => {
+  try {
+   const response = await axiosInstance.delete(`${id}`);
+   return response.data;
+  } catch (error) {
+    console.error(`Erreur lors de la suppression du produit ${id}:`, error);
+    throw error;
+  }
+};
+
 //Initialiser les actions par défaut pour un produit
 export const initActions = async (produitId) => {
   try {
@@ -68,6 +78,18 @@ export const getProduitById = async (id) => {
     throw error;
   }
 };
+//Modifier l'employe appartient à une action
+export const updateActionEmploye = async (actionId, employeId) => {
+  try{
+    const response = await axiosInstance.put(`/actions/${actionId}/employe`, employeId)
+     return response.data;
+  }catch (error) {
+    console.error(`Erreur lors de la mise à jour de l'action:`, error);
+    throw error;
+  }
+};
+
+
 //Mettre à jour une action
 export const updateActionProduit = async (actionId, action) => {
   try{
@@ -102,12 +124,3 @@ export const updateParametresGeneraux = async (produitId, parametres) => {
   }
 };
 
-export const deleteProduit = async (id) => {
-  try {
-   const response = await axiosInstance.delete(`${id}`);
-   return response.data;
-  } catch (error) {
-    console.error(`Erreur lors de la suppression du produit ${id}:`, error);
-    throw error;
-  }
-};

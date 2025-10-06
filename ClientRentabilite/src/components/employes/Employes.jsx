@@ -83,7 +83,7 @@ export default function Employes() {
                   {Object.keys(selectedEmploye).map((key) =>{
                     const k = key.toLowerCase();
 
-                    const ignoreFields = ["id", "nom", "coutparminute","coutannueltotal","minutesdisponiblesparan",
+                    const ignoreFields = ["id", "nom","coutparheure", "coutparminute","coutannueltotal","minutesdisponiblesparan",
                       "ticketsppn", "aidescolaire","voitureamortissement","carburant","assurance","fraismedicaux",
                       "csr", "cnaps", "telephone", "autre", "gratification" , "heuresdisponiblesparan", "osie","socialentretien"
                     ];
@@ -115,7 +115,7 @@ export default function Employes() {
                   {Object.keys(selectedEmploye).map((key) =>{
                     const k = key.toLowerCase();
 
-                    const ignoreFields = ["id", "nom", "coutparminute","coutannueltotal","minutesdisponiblesparan",
+                    const ignoreFields = ["id", "nom", "coutparheure","coutparminute","coutannueltotal","minutesdisponiblesparan",
                       "indemnitebase", "complementsalaire", "assiduite","responsabilite", "fonction", "restauration",
                       "entretien", "wu", "logement", "technicite", "transport", "caisse", "representation",
                        "telephone", "autre", "gratification" , "heuresdisponiblesparan", "ticketsppn", "aidescolaire","voitureamortissement","carburant","assurance","socialentretien"
@@ -149,7 +149,7 @@ export default function Employes() {
                   {Object.keys(selectedEmploye).map((key) =>{
                     const k = key.toLowerCase();
 
-                    const ignoreFields = ["id", "nom", "coutparminute","coutannueltotal","minutesdisponiblesparan",
+                    const ignoreFields = ["id", "nom","coutparheure", "coutparminute","coutannueltotal","minutesdisponiblesparan",
                       "indemnitebase", "complementsalaire", "assiduite","responsabilite", "fonction", "restauration",
                       "entretien", "wu", "logement", "technicite", "transport", "caisse", "representation","fraismedicaux",
                       "csr", "cnaps", "telephone", "autre", "gratification" , "heuresdisponiblesparan", "osie"
