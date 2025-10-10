@@ -6,7 +6,7 @@ import CreateProduit from "./components/produits/CreateProduit";
 import ChoisirProduit from "./components/actions/ChoisirProduit"
 import CoutUnitaire from "./components/actions/CoutUnitaire"
 import Employes from "./components/employes/Employes";
-
+import Marge from "./components/marge/Marge";
 
 /*import Home from "./pages/Home";
 import Produits from "./pages/Produits";
@@ -25,6 +25,7 @@ function App() {
             <Route path="/coût-unitaire/:id" element={<CoutUnitaire/>} />
             <Route path="/employes" element={<Employes/>} />
             <Route path="/produits/nouveau" element={<CreateProduit />} />
+            <Route path="/marge" element={<Marge />} />
           </Routes>
       </Layout>
     </Router>
