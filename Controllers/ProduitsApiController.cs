@@ -300,5 +300,22 @@ namespace OutilRentabilite.Controllers
             return Ok(action);
         } 
 
+        [HttpPost("{id}/resultats")]
+        public async Task<IActionResult> EnregistrerResultat(int id, [FromBody] ResultatCalcul resultat)
+        {
+            var produit = await _context.ProduitsFinanciers.FindAsync(id);
+
+            if(produit == null) return NotFound("Produit non trouvé.");
+
+            resultat.ProduitFinancierId = id;
+            resultat.DateCalcul = DateTime.Now;
+
+            _context.ResultatCalculs.Add(resultat);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Résultat enregistré avec succés"});
+        }
+
     }
 }

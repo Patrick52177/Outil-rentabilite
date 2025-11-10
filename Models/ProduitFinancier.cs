@@ -17,5 +17,7 @@ public class ProduitFinancier
     public ICollection<ParametresSimulation>? Simulations { get; set; }
 
     public ICollection<ActionProduit>? Actions { get; set; } = new List<ActionProduit>();
+
+    public ICollection<ResultatCalcul>? Resultats { get; set; }
     
 }

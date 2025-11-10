@@ -17,6 +17,10 @@ public class AppDbContext : DbContext
     public DbSet<ActionProduit> ActionsProduits { get; set; }
   //  public DbSet<TypeAction> TypeActions { get; set; }
     public DbSet<ParametresGenerauxProduit> ParametresGenerauxProduits { get; set; }
+    public DbSet<ResultatCalcul> ResultatCalculs { get; set; }
+
+    public DbSet<TauxMarche> TauxMarches { get; set; }
+
   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,6 +35,12 @@ public class AppDbContext : DbContext
             .HasOne(a => a.Employe)
             .WithMany()
             .HasForeignKey(a => a.EmployeId);
+
+        modelBuilder.Entity<ProduitFinancier>()
+            .HasMany(p => p.Resultats)
+            .WithOne(r => r.ProduitFinancier)
+            .HasForeignKey(r => r.ProduitFinancierId)
+            .OnDelete(DeleteBehavior.Cascade);
 
       
             

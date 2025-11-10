@@ -300,6 +300,31 @@ namespace OutilRentabilite.Migrations
                     b.ToTable("ProduitsFinanciers");
                 });
 
+            modelBuilder.Entity("OutilRentabilite.Models.ResultatCalcul", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("CoutUnitairePartiel")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<DateTime>("DateCalcul")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int>("ProduitFinancierId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProduitFinancierId");
+
+                    b.ToTable("ResultatCalculs");
+                });
+
             modelBuilder.Entity("OutilRentabilite.Models.ResultatSimulation", b =>
                 {
                     b.Property<int>("Id")
@@ -350,6 +375,62 @@ namespace OutilRentabilite.Migrations
                     b.ToTable("ResultatsSimulations");
                 });
 
+            modelBuilder.Entity("OutilRentabilite.Models.TauxMarche", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("BTA180")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("BTA30")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("BTA360")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("BTA90")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<DateTime>("DateEnregistrement")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<decimal>("Marge")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("Refinancement")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("ReserveObligatoire")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("TauxIRCM")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("TauxInteret")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<decimal>("TauxPlacementJourLeJour")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TauxMarches");
+                });
+
             modelBuilder.Entity("OutilRentabilite.Models.ActionProduit", b =>
                 {
                     b.HasOne("OutilRentabilite.Models.Employe", "Employe")
@@ -391,6 +472,17 @@ namespace OutilRentabilite.Migrations
                     b.Navigation("ProduitFinancier");
                 });
 
+            modelBuilder.Entity("OutilRentabilite.Models.ResultatCalcul", b =>
+                {
+                    b.HasOne("OutilRentabilite.Models.ProduitFinancier", "ProduitFinancier")
+                        .WithMany("Resultats")
+                        .HasForeignKey("ProduitFinancierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProduitFinancier");
+                });
+
             modelBuilder.Entity("OutilRentabilite.Models.ResultatSimulation", b =>
                 {
                     b.HasOne("OutilRentabilite.Models.ParametresSimulation", "parametresSimulation")
@@ -412,6 +504,8 @@ namespace OutilRentabilite.Migrations
                     b.Navigation("Actions");
 
                     b.Navigation("ParametresGenerauxProduit");
+
+                    b.Navigation("Resultats");
 
                     b.Navigation("Simulations");
                 });

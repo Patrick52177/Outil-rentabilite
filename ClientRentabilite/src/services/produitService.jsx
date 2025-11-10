@@ -124,3 +124,11 @@ export const updateParametresGeneraux = async (produitId, parametres) => {
   }
 };
 
+  export const enregistrerResultat = async (produitId, resultat) => {
+    try {
+      const response = await axiosInstance.post(`${produitId}/resultats`, resultat);
+      return response.data;
+  } catch(error){
+    console.error(`Erreur lors de l'enregistrement de resultat' :`, error);
+}
+  };

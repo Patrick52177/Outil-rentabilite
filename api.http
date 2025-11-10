@@ -1,0 +1,3 @@
+GET  http://localhost:5243/api/ProduitsApi/25/details
+
+Accept: application/json

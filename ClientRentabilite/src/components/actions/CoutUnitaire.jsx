@@ -8,6 +8,7 @@ import {
   updateActionProduit,
   updateParametresGeneraux,
   getCoutUnitairePartiel,
+  enregistrerResultat,
 } from "../../services/produitService";
 import { getEmployes } from "../../services/employeService"
 
@@ -89,14 +90,16 @@ try {
   };
 
   // ✅ Sauvegarde côté serveur
-  const handleSaveAll = async () => {
+  const handleSaveResultat = async () => {
+    if(!resultat || !produit) return ;
+    
     try {
-      for (let action of produit.actions) {
-        await updateActionProduit(action.id, action);
-      }
-      await updateParametresGeneraux(produit.id, charges);
-      alert("Mise à jour effectuée avec succès !");
-    } catch (error) {
+      const payload = {
+        CoutUnitairePartiel: resultat.coutPartiel};
+
+        await enregistrerResultat(produit.id, payload);
+        alert("Résultat enregistré avec succès !");
+      }catch (error) {
       alert("Erreur lors de la sauvegarde.");
       console.error(error);
     }
@@ -213,7 +216,7 @@ try {
 
         {/* Boutons */}
         <div className="d-flex justify-content-end mt-4">
-          <button className="btn btn-success me-2" onClick={handleSaveAll}>
+          <button className="btn btn-success me-2" onClick={handleSaveResultat}>
             💾 Sauvegarder
           </button>
           <button className="btn btn-primary" onClick={calculerCoutPartiel}>
