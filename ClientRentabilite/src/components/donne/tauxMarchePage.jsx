@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   createTauxMarche,
   getTauxMarcheCalculs,
@@ -22,7 +22,6 @@ export default function TauxMarchePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // 🔹 Gérer le changement des champs du formulaire
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTaux((prev) => ({
@@ -31,241 +30,131 @@ export default function TauxMarchePage() {
     }));
   };
 
-  // 🔹 Envoi du formulaire + calcul des résultats
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    
-    try {
-      // 1️⃣ Enregistrement du taux dans le backend
-      const response = await createTauxMarche(taux);
-      console.log("Response:", response);
-      
-      // ✅ Récupérer l'ID depuis la réponse
-      const id = response.id;
-      
-      if (!id) {
-        throw new Error("ID non retourné par le serveur");
-      }
+  // 🔹 Calcul automatique à chaque changement de taux
+  useEffect(() => {
+    const calculer = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // Créer ou mettre à jour le taux sur le backend
+        const response = await createTauxMarche(taux);
+        const id = response.id;
+        if (!id) throw new Error("ID non retourné par le serveur");
 
-      // 2️⃣ Calcul automatique côté backend
-      const calculs = await getTauxMarcheCalculs(id);
-      setResultats(calculs);
-      
-    } catch (err) {
-      console.error("Erreur :", err);
-      setError("Une erreur est survenue lors du calcul des taux.");
-    } finally {
-      setLoading(false);
+        // Récupérer les calculs
+        const calculs = await getTauxMarcheCalculs(id);
+        setResultats(calculs);
+      } catch (err) {
+        console.error(err);
+        setError("Erreur lors du calcul automatique");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    calculer();
+  }, [taux]);
+
+  const getEmprunt = (key) => {
+    if (!resultats) return "-";
+    switch (key) {
+      case "tauxPlacementJourLeJour": return resultats.emprunts?.jour?.toFixed(4) || "-";
+      case "bta30": return resultats.emprunts?.j30?.toFixed(4) || "-";
+      case "bta90": return resultats.emprunts?.j90?.toFixed(4) || "-";
+      case "bta180": return resultats.emprunts?.j180?.toFixed(4) || "-";
+      case "bta360": return resultats.emprunts?.j360?.toFixed(4) || "-";
+      default: return "-";
     }
   };
 
+  const getResultat = (key) => {
+    if (!resultats) return "-";
+    switch (key) {
+      case "tauxPlacementJourLeJour": return resultats.resultats?.jour?.toFixed(6) || "-";
+      case "bta30": return resultats.resultats?.j30?.toFixed(6) || "-";
+      case "bta90": return resultats.resultats?.j90?.toFixed(6) || "-";
+      case "bta180": return resultats.resultats?.j180?.toFixed(6) || "-";
+      case "bta360": return resultats.resultats?.j360?.toFixed(6) || "-";
+      default: return "-";
+    }
+  };
+
+  const fields = [
+    { key: "tauxPlacementJourLeJour", label: "Taux placement jour le jour" },
+    { key: "bta30", label: "Taux placement BTA 30 jours" },
+    { key: "bta90", label: "Taux placement BTA 90 jours" },
+    { key: "bta180", label: "Taux placement BTA 180 jours" },
+    { key: "bta360", label: "Taux placement BTA 360 jours" },
+    { key: "tauxIRCM", label: "Taux IRCM" },
+    { key: "reserveObligatoire", label: "Réserve obligatoire" },
+    { key: "tauxInteret", label: "Taux d'intérêt" },
+    { key: "refinancement", label: "Refinancement" },
+    { key: "marge", label: "Marge" },
+  ];
+
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-2xl font-bold text-center mb-6">
         💰 Gestion et calcul des taux du marché
       </h1>
 
-      {/* ========================= ERREUR ========================= */}
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
         </div>
       )}
 
-      {/* ========================= FORMULAIRE ========================= */}
-      <form
-        onSubmit={handleSubmit}
-        className="grid grid-cols-2 gap-4 bg-gray-50 p-6 rounded-xl shadow-md"
-      >
-        <div>
-          <label className="block font-semibold">
-            Taux placement jour le jour
-          </label>
-          <input
-            type="number"
-            step="0.0001"
-            name="tauxPlacementJourLeJour"
-            value={taux.tauxPlacementJourLeJour}
-            onChange={handleChange}
-            className="border rounded p-2 w-full"
-          />
+      <div className="space-y-4 bg-gray-50 p-6 rounded-xl shadow-md">
+        {/* En-tête */}
+        <div className="flex items-center font-semibold text-gray-700 border-b border-gray-300 pb-2">
+          <div className="w-1/2 min-w-[220px]">📥 Saisie</div>
+          <div className="w-1/4 min-w-[100px] text-center">💵 Emprunt (%)</div>
+          <div className="w-1/4 min-w-[100px] text-center">📈 Résultat</div>
         </div>
 
-        <div>
-          <label className="block font-semibold">BTA 30 jours</label>
-          <input
-            type="number"
-            step="0.0001"
-            name="bta30"
-            value={taux.bta30}
-            onChange={handleChange}
-            className="border rounded p-2 w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">BTA 90 jours</label>
-          <input
-            type="number"
-            step="0.0001"
-            name="bta90"
-            value={taux.bta90}
-            onChange={handleChange}
-            className="border rounded p-2 w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">BTA 180 jours</label>
-          <input
-            type="number"
-            step="0.0001"
-            name="bta180"
-            value={taux.bta180}
-            onChange={handleChange}
-            className="border rounded p-2 w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">BTA 360 jours</label>
-          <input
-            type="number"
-            step="0.0001"
-            name="bta360"
-            value={taux.bta360}
-            onChange={handleChange}
-            className="border rounded p-2 w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">Taux IRCM</label>
-          <input
-            type="number"
-            step="0.0001"
-            name="tauxIRCM"
-            value={taux.tauxIRCM}
-            onChange={handleChange}
-            className="border rounded p-2 w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">Réserve obligatoire</label>
-          <input
-            type="number"
-            step="0.0001"
-            name="reserveObligatoire"
-            value={taux.reserveObligatoire}
-            onChange={handleChange}
-            className="border rounded p-2 w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">Taux d'intérêt</label>
-          <input
-            type="number"
-            step="0.0001"
-            name="tauxInteret"
-            value={taux.tauxInteret}
-            onChange={handleChange}
-            className="border rounded p-2 w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">Refinancement</label>
-          <input
-            type="number"
-            step="0.0001"
-            name="refinancement"
-            value={taux.refinancement}
-            onChange={handleChange}
-            className="border rounded p-2 w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold">Marge</label>
-          <input
-            type="number"
-            step="0.0001"
-            name="marge"
-            value={taux.marge}
-            onChange={handleChange}
-            className="border rounded p-2 w-full"
-          />
-        </div>
-
-        <div className="col-span-2 text-center">
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
-            disabled={loading}
+        {/* Lignes */}
+        {fields.map(({ key, label }) => (
+          <div
+            key={key}
+            className="flex items-center space-x-4 py-2 border-b border-gray-200"
           >
-            {loading ? "Calcul en cours..." : "Calculer"}
-          </button>
-        </div>
-      </form>
+            {/* Input */}
+            <div className="w-1/2 min-w-[220px]">
+              <label className="block font-medium">{label}</label>
+              <input
+                type="number"
+                step="0.0001"
+                name={key}
+                value={taux[key]  || ""}
+                onChange={handleChange}
+                className="border rounded p-2 w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
 
-      {/* ========================= RÉSULTATS ========================= */}
-      {resultats && (
-        <div className="mt-8">
-          {/* Tableau des taux d'emprunt */}
-          <h2 className="text-xl font-bold mb-3">📊 Taux d'emprunt</h2>
-          <table className="table-auto border w-full mb-6">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="border p-2">Période</th>
-                <th className="border p-2">Jour</th>
-                <th className="border p-2">30 jours</th>
-                <th className="border p-2">90 jours</th>
-                <th className="border p-2">180 jours</th>
-                <th className="border p-2">360 jours</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="text-center">
-                <td className="border p-2 font-semibold">Taux emprunt (%)</td>
-                <td className="border p-2">{resultats.emprunts.jour.toFixed(4)}</td>
-                <td className="border p-2">{resultats.emprunts.j30.toFixed(4)}</td>
-                <td className="border p-2">{resultats.emprunts.j90.toFixed(4)}</td>
-                <td className="border p-2">{resultats.emprunts.j180.toFixed(4)}</td>
-                <td className="border p-2">{resultats.emprunts.j360.toFixed(4)}</td>
-              </tr>
-            </tbody>
-          </table>
+            {/* Taux emprunt */}
+            <div className="w-1/4 min-w-[100px] text-center">
+              {["tauxPlacementJourLeJour", "bta30", "bta90", "bta180", "bta360"].includes(key) ? (
+                <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold shadow">
+                  {loading ? "..." : getEmprunt(key)}
+                </span>
+              ) : (
+                <span>-</span>
+              )}
+            </div>
 
-          {/* Tableau des résultats calculés */}
-          <h2 className="text-xl font-bold mb-3">📈 Résultats calculés</h2>
-          <table className="table-auto border w-full">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="border p-2">Période</th>
-                <th className="border p-2">Jour</th>
-                <th className="border p-2">30 jours</th>
-                <th className="border p-2">90 jours</th>
-                <th className="border p-2">180 jours</th>
-                <th className="border p-2">360 jours</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="text-center">
-                <td className="border p-2 font-semibold">Résultat</td>
-                <td className="border p-2">{resultats.resultats.jour.toFixed(6)}</td>
-                <td className="border p-2">{resultats.resultats.j30.toFixed(6)}</td>
-                <td className="border p-2">{resultats.resultats.j90.toFixed(6)}</td>
-                <td className="border p-2">{resultats.resultats.j180.toFixed(6)}</td>
-                <td className="border p-2">{resultats.resultats.j360.toFixed(6)}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      )}
+            {/* Résultat calculé */}
+            <div className="w-1/4 min-w-[100px] text-center">
+              {["tauxPlacementJourLeJour", "bta30", "bta90", "bta180", "bta360"].includes(key) ? (
+                <span className="inline-block bg-purple-100 text-purple-800 px-3 py-1 rounded-full font-semibold shadow">
+                  {loading ? "..." : getResultat(key)}
+                </span>
+              ) : (
+                <span>-</span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
