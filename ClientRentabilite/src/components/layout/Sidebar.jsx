@@ -54,7 +54,7 @@ export default function Sidebar({ isOpen, onClose }) {
     { path: "/produits", label: "Produits", icon: IconPackage },
     { path: "/coût-unitaire", label: "Coût unitaire", icon: IconDollar },
     { path: "/marge", label: "Marge", icon: IconTrending },
-    { path: "/simulation", label: "Historique", icon: IconHistory },
+    { path: "/Historique", label: "Historique des taux", icon: IconHistory },
   ];
 
   const handleNavigation = (path) => {
