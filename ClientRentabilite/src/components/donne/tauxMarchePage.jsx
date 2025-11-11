@@ -4,6 +4,7 @@ import {
   getTauxMarcheCalculs,
   getTauxMarches,
 } from "../../services/tauxMarcheService";
+import "./tauxMarchePage.css"; // <--- CSS personnalisé
 
 export default function TauxMarchePage() {
   const [taux, setTaux] = useState({
@@ -26,7 +27,7 @@ export default function TauxMarchePage() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [calculLoading, setCalculLoading] = useState(false);
 
-  // ✅ Fonction utilitaire pour normaliser les noms venant du backend
+  // Normaliser les noms venant du backend
   const normaliserTaux = (data) => ({
     tauxPlacementJourLeJour: data.tauxPlacementJourLeJour ?? data.TauxPlacementJourLeJour ?? 0,
     bta30: data.bta30 ?? data.BTA30 ?? 0,
@@ -40,7 +41,6 @@ export default function TauxMarchePage() {
     marge: data.marge ?? data.Marge ?? 0,
   });
 
-  // ✅ Charger le dernier taux
   const fetchDernierTaux = async () => {
     try {
       setLoading(true);
@@ -49,34 +49,29 @@ export default function TauxMarchePage() {
         const dernier = liste[0];
         setTaux(normaliserTaux(dernier));
         setDernierTauxDate(new Date(dernier.dateEnregistrement ?? dernier.DateEnregistrement));
-
-        // Charger les résultats du dernier taux
         const calculs = await getTauxMarcheCalculs(dernier.id ?? dernier.Id);
         setResultats(calculs);
       }
     } catch (err) {
-      console.error("Erreur lors du chargement du dernier taux :", err);
-      setError("Impossible de charger le dernier taux enregistré.");
+      console.error(err);
+      setError("Impossible de charger le dernier taux.");
     } finally {
       setLoading(false);
     }
   };
 
-  // 🟢 Appel initial au chargement
   useEffect(() => {
     fetchDernierTaux();
   }, []);
 
-  // 🔹 Calcul en temps réel sans enregistrement
+  // Calcul instantané
   useEffect(() => {
-    const calculerEnTempsReel = async () => {
-      // Vérifier si au moins un champ BTA est rempli
+    const calculer = () => {
       const hasData = taux.tauxPlacementJourLeJour > 0 || 
                       taux.bta30 > 0 || 
                       taux.bta90 > 0 || 
                       taux.bta180 > 0 || 
                       taux.bta360 > 0;
-      
       if (!hasData) {
         setResultats(null);
         return;
@@ -84,73 +79,55 @@ export default function TauxMarchePage() {
 
       setCalculLoading(true);
       try {
-        // Calcul local sans enregistrement
-        const empruntJour = taux.tauxPlacementJourLeJour + taux.marge;
-        const emprunt30 = taux.bta30 + taux.marge;
-        const emprunt90 = taux.bta90 + taux.marge;
-        const emprunt180 = taux.bta180 + taux.marge;
-        const emprunt360 = taux.bta360 + taux.marge;
+        const emprunt = {
+          jour: taux.tauxPlacementJourLeJour + taux.marge,
+          j30: taux.bta30 + taux.marge,
+          j90: taux.bta90 + taux.marge,
+          j180: taux.bta180 + taux.marge,
+          j360: taux.bta360 + taux.marge,
+        };
 
-        const calc = (emprunt, tauxPlacement) => 
-          (emprunt - tauxPlacement) * taux.reserveObligatoire;
+        const calc = (e, t) => (e - t) * taux.reserveObligatoire;
 
         setResultats({
-          emprunts: {
-            jour: empruntJour,
-            j30: emprunt30,
-            j90: emprunt90,
-            j180: emprunt180,
-            j360: emprunt360
-          },
+          emprunts: emprunt,
           resultats: {
-            jour: calc(empruntJour, taux.tauxPlacementJourLeJour),
-            j30: calc(emprunt30, taux.bta30),
-            j90: calc(emprunt90, taux.bta90),
-            j180: calc(emprunt180, taux.bta180),
-            j360: calc(emprunt360, taux.bta360)
+            jour: calc(emprunt.jour, taux.tauxPlacementJourLeJour),
+            j30: calc(emprunt.j30, taux.bta30),
+            j90: calc(emprunt.j90, taux.bta90),
+            j180: calc(emprunt.j180, taux.bta180),
+            j360: calc(emprunt.j360, taux.bta360),
           }
         });
-      } catch (err) {
-        console.error("Erreur calcul:", err);
+      } catch(err) {
+        console.error(err);
       } finally {
         setCalculLoading(false);
       }
     };
-
-    calculerEnTempsReel();
+    calculer();
   }, [taux]);
 
-  // 🔹 Enregistrer dans la base de données
   const handleEnregistrer = async () => {
     setLoading(true);
     setError(null);
     setSaveSuccess(false);
-
     try {
       const response = await createTauxMarche(taux);
-      const id = response.id;
-      
-      if (!id) {
-        throw new Error("ID non retourné par le serveur");
-      }
-
-      // Récupérer les calculs depuis le backend
-      const calculs = await getTauxMarcheCalculs(id);
+      if (!response.id) throw new Error("ID manquant");
+      const calculs = await getTauxMarcheCalculs(response.id);
       setResultats(calculs);
       setDernierTauxDate(new Date());
-      
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
-      
-    } catch (err) {
-      console.error("Erreur :", err);
-      setError("Une erreur est survenue lors de l'enregistrement.");
+    } catch(err) {
+      console.error(err);
+      setError("Erreur lors de l'enregistrement.");
     } finally {
       setLoading(false);
     }
   };
 
-  // 🔹 Réinitialiser le formulaire
   const handleReset = () => {
     setTaux({
       tauxPlacementJourLeJour: 0,
@@ -171,24 +148,24 @@ export default function TauxMarchePage() {
 
   const getEmprunt = (key) => {
     if (!resultats) return "-";
-    switch (key) {
-      case "tauxPlacementJourLeJour": return resultats.emprunts?.jour?.toFixed(4) || "-";
-      case "bta30": return resultats.emprunts?.j30?.toFixed(4) || "-";
-      case "bta90": return resultats.emprunts?.j90?.toFixed(4) || "-";
-      case "bta180": return resultats.emprunts?.j180?.toFixed(4) || "-";
-      case "bta360": return resultats.emprunts?.j360?.toFixed(4) || "-";
+    switch(key){
+      case "tauxPlacementJourLeJour": return resultats.emprunts?.jour?.toFixed(4)||"-";
+      case "bta30": return resultats.emprunts?.j30?.toFixed(4)||"-";
+      case "bta90": return resultats.emprunts?.j90?.toFixed(4)||"-";
+      case "bta180": return resultats.emprunts?.j180?.toFixed(4)||"-";
+      case "bta360": return resultats.emprunts?.j360?.toFixed(4)||"-";
       default: return "-";
     }
   };
 
   const getResultat = (key) => {
     if (!resultats) return "-";
-    switch (key) {
-      case "tauxPlacementJourLeJour": return resultats.resultats?.jour?.toFixed(6) || "-";
-      case "bta30": return resultats.resultats?.j30?.toFixed(6) || "-";
-      case "bta90": return resultats.resultats?.j90?.toFixed(6) || "-";
-      case "bta180": return resultats.resultats?.j180?.toFixed(6) || "-";
-      case "bta360": return resultats.resultats?.j360?.toFixed(6) || "-";
+    switch(key){
+      case "tauxPlacementJourLeJour": return resultats.resultats?.jour?.toFixed(6)||"-";
+      case "bta30": return resultats.resultats?.j30?.toFixed(6)||"-";
+      case "bta90": return resultats.resultats?.j90?.toFixed(6)||"-";
+      case "bta180": return resultats.resultats?.j180?.toFixed(6)||"-";
+      case "bta360": return resultats.resultats?.j360?.toFixed(6)||"-";
       default: return "-";
     }
   };
@@ -206,125 +183,51 @@ export default function TauxMarchePage() {
     { key: "marge", label: "Marge" },
   ];
 
-  const formatDate = (date) => {
-    if (!date) return "";
-    return date.toLocaleString("fr-FR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+  const formatDate = (date) => date ? date.toLocaleString("fr-FR", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" }) : "";
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <div className="flex justify-between items-center mb-2">
-        <h1 className="text-2xl font-bold text-center">
-          💰 Gestion et calcul des taux du marché
-        </h1>
-
-        {/* 🔄 Boutons d'action */}
-        <div className="flex gap-3">
-          <button
-            onClick={fetchDernierTaux}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow font-semibold transition"
-            disabled={loading}
-          >
-            🔄 Actualiser
-          </button>
-          
-          <button
-            onClick={handleReset}
-            className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded shadow font-semibold transition"
-            disabled={loading}
-          >
-            ↺ Réinitialiser
-          </button>
-          
-          <button
-            onClick={handleEnregistrer}
-            className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded shadow font-semibold transition disabled:bg-gray-400"
-            disabled={loading}
-          >
-            {loading ? "⏳ Enregistrement..." : "💾 Enregistrer"}
-          </button>
+    <div className="taux-container">
+      <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
+        <h1 className="h4 mb-2 mb-md-0">💰 Gestion et calcul des taux du marché</h1>
+        <div className="btn-group">
+          <button onClick={fetchDernierTaux} className="btn btn-primary" disabled={loading}>🔄 Actualiser</button>
+          <button onClick={handleReset} className="btn btn-outline-secondary" disabled={loading}>↺ Réinitialiser</button>
+          <button onClick={handleEnregistrer} className="btn btn-success" disabled={loading}>{loading ? "⏳ Enregistrement..." : "💾 Enregistrer"}</button>
         </div>
       </div>
 
-      {dernierTauxDate && (
-        <div className="text-sm text-center text-gray-600 mb-4">
-          🕒 Dernière mise à jour :{" "}
-          <span className="font-semibold text-blue-700">
-            {formatDate(dernierTauxDate)}
-          </span>
-        </div>
-      )}
+      {dernierTauxDate && <div className="text-center text-muted mb-3">🕒 Dernière mise à jour : <strong className="text-primary">{formatDate(dernierTauxDate)}</strong></div>}
+      {saveSuccess && <div className="alert alert-success">✅ Les taux ont été enregistrés avec succès !</div>}
+      {error && <div className="alert alert-danger">⚠️ {error}</div>}
 
-      {/* Message de succès */}
-      {saveSuccess && (
-        <div className="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded mb-4 shadow">
-          <p className="font-bold">✅ Succès</p>
-          <p>Les taux ont été enregistrés avec succès dans l'historique !</p>
-        </div>
-      )}
-
-      {/* Message d'erreur */}
-      {error && (
-        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded mb-4 shadow">
-          <p className="font-bold">⚠️ Erreur</p>
-          <p>{error}</p>
-        </div>
-      )}
-
-      <div className="space-y-4 bg-gray-50 p-6 rounded-xl shadow-md">
-        <div className="flex items-center font-semibold text-gray-700 border-b border-gray-300 pb-2">
-          <div className="w-1/2"></div>
-          <div className="w-1/4 text-center">💵 Emprunt (%)</div>
-          <div className="w-1/4 text-center">📈 Résultat</div>
+      <div className="taux-card">
+        <div className="row fw-bold taux-header mb-2">
+          <div className="col-6">📌 Taux</div>
+          <div className="col-3 text-center">💵 Emprunt (%)</div>
+          <div className="col-3 text-center">📈 Résultat</div>
         </div>
 
         {fields.map(({ key, label }) => (
-          <div
-            key={key}
-            className="flex items-center space-x-4 py-2 border-b border-gray-200"
-          >
-            <div className="w-1/2 min-w-[220px]">
-              <label className="block font-medium">{label}</label>
+          <div key={key} className="row taux-row border-bottom">
+            <div className="col-6">
+              <label>{label}</label>
               <input
                 type="number"
                 step="0.0001"
-                name={key}
-                value={taux[key] || ""}
-                onChange={(e) =>
-                  setTaux({ ...taux, [key]: parseFloat(e.target.value) || 0 })
-                }
-                className="border rounded p-2 w-full shadow-sm focus:ring-2 focus:ring-blue-400"
+                value={taux[key]}
+                onChange={(e) => setTaux({ ...taux, [key]: parseFloat(e.target.value) || 0 })}
+                className="form-control form-control-sm"
               />
             </div>
 
-            <div className="w-1/4 text-center">
-              {["tauxPlacementJourLeJour", "bta30", "bta90", "bta180", "bta360"].includes(
-                key
-              ) ? (
-                <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold shadow">
-                  {calculLoading ? "..." : getEmprunt(key)}
-                </span>
-              ) : (
-                <span>-</span>
-              )}
+            <div className="col-3 text-center">
+              {["tauxPlacementJourLeJour","bta30","bta90","bta180","bta360"].includes(key) ?
+                <span className="badge-custom bg-emprunt">{calculLoading ? "..." : getEmprunt(key)}</span> : "-"}
             </div>
 
-            <div className="w-1/4 text-center">
-              {["tauxPlacementJourLeJour", "bta30", "bta90", "bta180", "bta360"].includes(
-                key
-              ) ? (
-                <span className="inline-block bg-purple-100 text-purple-800 px-3 py-1 rounded-full font-semibold shadow">
-                  {calculLoading ? "..." : getResultat(key)}
-                </span>
-              ) : (
-                <span>-</span>
-              )}
+            <div className="col-3 text-center">
+              {["tauxPlacementJourLeJour","bta30","bta90","bta180","bta360"].includes(key) ?
+                <span className="badge-custom bg-resultat">{calculLoading ? "..." : getResultat(key)}</span> : "-"}
             </div>
           </div>
         ))}

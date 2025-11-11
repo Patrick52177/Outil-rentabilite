@@ -1,0 +1,151 @@
+/* Container général */
+.taux-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 2rem 1rem;
+}
+
+/* Card principale */
+.taux-card {
+    border-radius: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 2rem;
+    background: #ffffff;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.taux-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Row pour input + badges */
+.taux-row {
+    align-items: center;
+    padding: 0.5rem 0;
+    transition: background 0.2s;
+}
+
+.taux-row:hover {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+}
+
+/* Labels */
+.taux-row label {
+    font-weight: 600;
+}
+
+/* Inputs */
+.taux-row input.form-control {
+    border-radius: 0.5rem;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.taux-row input.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
+}
+
+/* Badges */
+.badge-custom {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.4rem 0.7rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.badge-custom:hover {
+    transform: scale(1.05);
+}
+
+/* Alerts */
+.alert {
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-weight: 500;
+}
+
+/* Titres */
+h1.h4 {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+/* Responsive spacing */
+@media (max-width: 576px) {
+    .taux-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .taux-row .col-3, .taux-row .col-6 {
+        text-align: left !important;
+        width: 100%;
+    }
+
+    .taux-row .badge-custom {
+        margin-top: 0.5rem;
+    }
+}
+/* Container */
+.container {
+  max-width: 1200px;
+}
+
+/* Card tableau */
+.card {
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* Tableau */
+.table th, .table td {
+  vertical-align: middle !important;
+  text-align: center;
+}
+.table th {
+  font-weight: 600;
+}
+.table td {
+  font-size: 0.95rem;
+}
+
+/* Badge */
+.badge {
+  padding: 0.5em 0.7em;
+  font-size: 0.85rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+
+/* Couleurs badges */
+.bg-success { background-color: #198754 !important; color: white; }
+.bg-warning { background-color: #ffc107 !important; }
+.bg-info { background-color: #0dcaf0 !important; color: white; }
+.bg-secondary { background-color: #6c757d !important; }
+.bg-danger { background-color: #dc3545 !important; color: white; }
+
+/* Footer */
+.card-footer {
+  background-color: #f8f9fa;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+/* Loader */
+.spinner-border {
+  width: 4rem;
+  height: 4rem;
+}
+
+/* Messages */
+.alert {
+  transition: all 0.3s ease-in-out;
+}

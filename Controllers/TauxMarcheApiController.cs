@@ -63,10 +63,10 @@ namespace OutilRentabilite.Controllers
             if (taux == null) return NotFound();
 
             decimal empruntJour = taux.TauxPlacementJourLeJour + taux.Marge;
-            decimal emprunt30 = taux.BTA30 + taux.Marge;
-            decimal emprunt90 = taux.BTA90 + taux.Marge;
-            decimal emprunt180 = taux.BTA180 + taux.Marge;
-            decimal emprunt360 = taux.BTA360 + taux.Marge;
+            decimal emprunt30 = taux.Bta30 + taux.Marge;
+            decimal emprunt90 = taux.Bta90 + taux.Marge;
+            decimal emprunt180 = taux.Bta180 + taux.Marge;
+            decimal emprunt360 = taux.Bta360 + taux.Marge;
 
             // ✅ Formule corrigée : (emprunt - tauxPlacement) * réserveObligatoire
             decimal Calc(decimal emprunt, decimal tauxPlacement)
@@ -85,10 +85,10 @@ namespace OutilRentabilite.Controllers
                 Resultats = new
                 {
                     Jour = Calc(empruntJour, taux.TauxPlacementJourLeJour),
-                    J30 = Calc(emprunt30, taux.BTA30),
-                    J90 = Calc(emprunt90, taux.BTA90),
-                    J180 = Calc(emprunt180, taux.BTA180),
-                    J360 = Calc(emprunt360, taux.BTA360)
+                    J30 = Calc(emprunt30, taux.Bta30),
+                    J90 = Calc(emprunt90, taux.Bta90),
+                    J180 = Calc(emprunt180, taux.Bta180),
+                    J360 = Calc(emprunt360, taux.Bta360)
                 }
             };
 

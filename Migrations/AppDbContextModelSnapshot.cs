@@ -383,19 +383,19 @@ namespace OutilRentabilite.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("BTA180")
+                    b.Property<decimal>("Bta180")
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
 
-                    b.Property<decimal>("BTA30")
+                    b.Property<decimal>("Bta30")
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
 
-                    b.Property<decimal>("BTA360")
+                    b.Property<decimal>("Bta360")
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
 
-                    b.Property<decimal>("BTA90")
+                    b.Property<decimal>("Bta90")
                         .HasPrecision(18, 4)
                         .HasColumnType("DECIMAL(18,4)");
 
