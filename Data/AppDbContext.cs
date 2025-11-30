@@ -11,9 +11,9 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<ProduitFinancier>? ProduitsFinanciers { get; set; }
-    public DbSet<ParametresSimulation>? ParametresSimulations { get; set; }
+    //public DbSet<ParametresSimulation>? ParametresSimulations { get; set; }
     public DbSet<Employe>? Employes { get; set; }
-    public DbSet<ResultatSimulation>? ResultatsSimulations { get; set; }
+    //public DbSet<ResultatSimulation>? ResultatsSimulations { get; set; }
     public DbSet<ActionProduit> ActionsProduits { get; set; }
   //  public DbSet<TypeAction> TypeActions { get; set; }
     public DbSet<ParametresGenerauxProduit> ParametresGenerauxProduits { get; set; }

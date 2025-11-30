@@ -70,7 +70,7 @@ namespace OutilRentabilite.Controllers
 
             // ✅ Formule corrigée : (emprunt - tauxPlacement) * réserveObligatoire
             decimal Calc(decimal emprunt, decimal tauxPlacement)
-                => (emprunt - tauxPlacement) * taux.ReserveObligatoire;
+                => tauxPlacement * (1 - (taux.TauxIRCM / 100))/+((emprunt - tauxPlacement*(1-(tauxPlacement/100))) * taux.ReserveObligatoire);
 
             var resultats = new
             {

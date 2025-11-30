@@ -217,68 +217,6 @@ namespace OutilRentabilite.Migrations
                     b.ToTable("ParametresGenerauxProduits");
                 });
 
-            modelBuilder.Entity("OutilRentabilite.Models.ParametresSimulation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("CoutFinancement")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<decimal>("CoutOperationnel")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<decimal>("CoutRisque")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<DateTime>("DateSimulation")
-                        .HasColumnType("TIMESTAMP(7)");
-
-                    b.Property<int>("DureeMois")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<decimal>("FondsPropres")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<decimal>("FraisDossier")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<decimal>("FraisGestion")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<decimal>("Montant")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<int>("NombreOffre")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<int>("ProduitFinancierId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<float>("TauxInteret")
-                        .HasColumnType("BINARY_FLOAT");
-
-                    b.Property<decimal>("TotalActif")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProduitFinancierId");
-
-                    b.ToTable("ParametresSimulations");
-                });
-
             modelBuilder.Entity("OutilRentabilite.Models.ProduitFinancier", b =>
                 {
                     b.Property<int>("Id")
@@ -323,56 +261,6 @@ namespace OutilRentabilite.Migrations
                     b.HasIndex("ProduitFinancierId");
 
                     b.ToTable("ResultatCalculs");
-                });
-
-            modelBuilder.Entity("OutilRentabilite.Models.ResultatSimulation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("BeneficeNet")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<decimal>("CoutTotal")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<float>("MargeBrute")
-                        .HasColumnType("BINARY_FLOAT");
-
-                    b.Property<float>("MargeNette")
-                        .HasColumnType("BINARY_FLOAT");
-
-                    b.Property<int>("ParametresSimulationId")
-                        .HasColumnType("NUMBER(10)");
-
-                    b.Property<decimal>("PaybackPeriod")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<float>("ROA")
-                        .HasColumnType("BINARY_FLOAT");
-
-                    b.Property<float>("ROE")
-                        .HasColumnType("BINARY_FLOAT");
-
-                    b.Property<float>("ROI")
-                        .HasColumnType("BINARY_FLOAT");
-
-                    b.Property<decimal>("RevenuTotal")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParametresSimulationId")
-                        .IsUnique();
-
-                    b.ToTable("ResultatsSimulations");
                 });
 
             modelBuilder.Entity("OutilRentabilite.Models.TauxMarche", b =>
@@ -461,17 +349,6 @@ namespace OutilRentabilite.Migrations
                     b.Navigation("ProduitFinancier");
                 });
 
-            modelBuilder.Entity("OutilRentabilite.Models.ParametresSimulation", b =>
-                {
-                    b.HasOne("OutilRentabilite.Models.ProduitFinancier", "ProduitFinancier")
-                        .WithMany("Simulations")
-                        .HasForeignKey("ProduitFinancierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProduitFinancier");
-                });
-
             modelBuilder.Entity("OutilRentabilite.Models.ResultatCalcul", b =>
                 {
                     b.HasOne("OutilRentabilite.Models.ProduitFinancier", "ProduitFinancier")
@@ -483,22 +360,6 @@ namespace OutilRentabilite.Migrations
                     b.Navigation("ProduitFinancier");
                 });
 
-            modelBuilder.Entity("OutilRentabilite.Models.ResultatSimulation", b =>
-                {
-                    b.HasOne("OutilRentabilite.Models.ParametresSimulation", "parametresSimulation")
-                        .WithOne("Resultat")
-                        .HasForeignKey("OutilRentabilite.Models.ResultatSimulation", "ParametresSimulationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("parametresSimulation");
-                });
-
-            modelBuilder.Entity("OutilRentabilite.Models.ParametresSimulation", b =>
-                {
-                    b.Navigation("Resultat");
-                });
-
             modelBuilder.Entity("OutilRentabilite.Models.ProduitFinancier", b =>
                 {
                     b.Navigation("Actions");
@@ -506,8 +367,6 @@ namespace OutilRentabilite.Migrations
                     b.Navigation("ParametresGenerauxProduit");
 
                     b.Navigation("Resultats");
-
-                    b.Navigation("Simulations");
                 });
 #pragma warning restore 612, 618
         }

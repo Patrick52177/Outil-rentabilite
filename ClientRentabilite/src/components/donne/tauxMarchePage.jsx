@@ -87,7 +87,7 @@ export default function TauxMarchePage() {
           j360: taux.bta360 + taux.marge,
         };
 
-        const calc = (e, t) => (e - t) * taux.reserveObligatoire;
+        const calc = (e, t) => t*(1-(taux.tauxIRCM/100))+(e - t) * taux.refinancement;
 
         setResultats({
           emprunts: emprunt,
@@ -149,11 +149,11 @@ export default function TauxMarchePage() {
   const getEmprunt = (key) => {
     if (!resultats) return "-";
     switch(key){
-      case "tauxPlacementJourLeJour": return resultats.emprunts?.jour?.toFixed(4)||"-";
-      case "bta30": return resultats.emprunts?.j30?.toFixed(4)||"-";
-      case "bta90": return resultats.emprunts?.j90?.toFixed(4)||"-";
-      case "bta180": return resultats.emprunts?.j180?.toFixed(4)||"-";
-      case "bta360": return resultats.emprunts?.j360?.toFixed(4)||"-";
+      case "tauxPlacementJourLeJour": return resultats.emprunts?.jour?.toFixed(2)||"-";
+      case "bta30": return resultats.emprunts?.j30?.toFixed(2)||"-";
+      case "bta90": return resultats.emprunts?.j90?.toFixed(2)||"-";
+      case "bta180": return resultats.emprunts?.j180?.toFixed(2)||"-";
+      case "bta360": return resultats.emprunts?.j360?.toFixed(2)||"-";
       default: return "-";
     }
   };
@@ -161,11 +161,11 @@ export default function TauxMarchePage() {
   const getResultat = (key) => {
     if (!resultats) return "-";
     switch(key){
-      case "tauxPlacementJourLeJour": return resultats.resultats?.jour?.toFixed(6)||"-";
-      case "bta30": return resultats.resultats?.j30?.toFixed(6)||"-";
-      case "bta90": return resultats.resultats?.j90?.toFixed(6)||"-";
-      case "bta180": return resultats.resultats?.j180?.toFixed(6)||"-";
-      case "bta360": return resultats.resultats?.j360?.toFixed(6)||"-";
+      case "tauxPlacementJourLeJour": return resultats.resultats?.jour?.toFixed(2)||"-";
+      case "bta30": return resultats.resultats?.j30?.toFixed(2)||"-";
+      case "bta90": return resultats.resultats?.j90?.toFixed(2)||"-";
+      case "bta180": return resultats.resultats?.j180?.toFixed(2)||"-";
+      case "bta360": return resultats.resultats?.j360?.toFixed(2)||"-";
       default: return "-";
     }
   };
@@ -214,7 +214,7 @@ export default function TauxMarchePage() {
               <input
                 type="number"
                 step="0.0001"
-                value={taux[key]}
+                value={taux[key] || ""}
                 onChange={(e) => setTaux({ ...taux, [key]: parseFloat(e.target.value) || 0 })}
                 className="form-control form-control-sm"
               />

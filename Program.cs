@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Oracle.EntityFrameworkCore;
 using OutilRentabilite.Data;
-using OutilRentabilite.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseOracle(builder.Configuration.GetConnectionString("OracleConnection")));
 
-builder.Services.AddScoped<SimulationService>();
 
 builder.Services.AddControllers();
 
